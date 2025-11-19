@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.loomi.api.dtos.ProductDto;
 import com.example.loomi.api.services.ProductsService;
-import com.example.loomi.domain.Product;
 import com.example.loomi.infrastructure.mappers.IProductMapper;
 
 
@@ -28,16 +28,16 @@ public class ProductsController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         return productsService.getAllProducts().stream()
-            .map(productMapper::toDomainProduct)
+            .map(productMapper::toDto)
             .toList();
     }
 
     @GetMapping("/{productId}")
-    public Optional<Product> getProductById(@PathVariable("productId") String productId) {
+    public Optional<ProductDto> getProductById(@PathVariable("productId") String productId) {
        return productsService.getProductById(productId)
-            .map(productMapper::toDomainProduct);            
+            .map(productMapper::toDto);            
     }
     
     
