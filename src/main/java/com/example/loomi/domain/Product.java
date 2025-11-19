@@ -9,13 +9,13 @@ public class Product {
     private BigDecimal price;
     private Integer stockQuantity;
     private boolean active = true;
-    private String metadata;
+    private Metadata metadata;
 
     public Product() {
     }
 
     public Product(String productId, String name, ProductType productType, BigDecimal price, Integer stockQuantity,
-            String metadata) {
+            Metadata metadata) {
         this.productId = productId;
         this.name = name;
         this.productType = productType;
@@ -72,11 +72,11 @@ public class Product {
         this.active = active;
     }
 
-    public String getMetadata() {
+    public Metadata getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(String metadata) {
+    public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
     }
 
