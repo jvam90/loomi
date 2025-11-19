@@ -17,6 +17,7 @@ public class ProductMapperImpl implements IProductMapper {
             entity.getProductType(),
             entity.getPrice(),
             entity.getStockQuantity(),
+            entity.isActive(),
            new Metadata(
                 entity.getMetadata().releaseDate(),
                 entity.getMetadata().preOrderSlots(),

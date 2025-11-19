@@ -50,13 +50,14 @@ public class ProductEntity {
     }
 
     public ProductEntity(String productId, String name, ProductType productType, BigDecimal price,
-            Integer stockQuantity,
+            Integer stockQuantity, boolean active,
             Metadata metadata) {
         this.productId = productId;
         this.name = name;
         this.productType = productType;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.active = active;
         this.metadata = metadata;
     }
 
