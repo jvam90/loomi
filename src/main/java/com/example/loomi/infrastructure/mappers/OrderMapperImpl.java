@@ -24,6 +24,19 @@ public class OrderMapperImpl implements IOrderMapper {
         this.productMapper = productMapper;
     }
 
+    /*
+     * A estrutura dos mapeamentos foi ajustada para refletir a nova composição
+     * entre Order e OrderItem,
+     * garantindo que os itens do pedido sejam corretamente convertidos entre as
+     * entidades JPA,
+     * domínios e DTOs. Para separar domínio de detalhes de implementação de
+     * persistência (JPA),
+     * foram usados OrderEntity, OrderItemEntity e ProductEntity nas conversões,
+     * evitando a exposição direta das entidades JPA.
+     * Uso do Copilot: analisar a estrutura das classes envolvidas e sugerir
+     * implementações de métodos de mapeamento que respeitem as relações entre elas.
+     */
+
     @Override
     public Order toDomainOrder(OrderEntity entity) {
         List<OrderItem> items = new ArrayList<>();
@@ -52,7 +65,8 @@ public class OrderMapperImpl implements IOrderMapper {
             for (OrderItem oi : order.getItems()) {
                 OrderItemEntity ie = new OrderItemEntity();
                 ie.setId(oi.getId());
-                // create minimal ProductEntity reference (only id) to avoid depending on full product mapper
+                // create minimal ProductEntity reference (only id) to avoid depending on full
+                // product mapper
                 ProductEntity pe = new ProductEntity();
                 if (oi.getProduct() != null) {
                     pe.setProductId(oi.getProduct().getProductId());
