@@ -7,11 +7,13 @@ public class Order {
     private String orderId;
     private String customerId;
     private List<Item> items;
+    private OrderStatus status;
 
-    public Order(String orderId, String customerId, List<Item> items) {
+    public Order(String orderId, String customerId, List<Item> items, OrderStatus status) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.items = items;
+        this.status = status;
     }
 
     public String getOrderId() {
@@ -38,6 +40,12 @@ public class Order {
         this.items = items;
     }
 
-    
-    
+    public OrderStatus getStatus() {
+        return status;
+    }    
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
 }
