@@ -1,14 +1,17 @@
 package com.example.loomi.api.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.loomi.api.services.ProductsService;
 import com.example.loomi.domain.Product;
 import com.example.loomi.infrastructure.mappers.IProductMapper;
+
 
 
 @RestController
@@ -30,6 +33,13 @@ public class ProductsController {
             .map(productMapper::toDomainProduct)
             .toList();
     }
+
+    @GetMapping("/{productId}")
+    public Optional<Product> getProductById(@PathVariable("productId") String productId) {
+       return productsService.getProductById(productId)
+            .map(productMapper::toDomainProduct);            
+    }
+    
     
     
 }
