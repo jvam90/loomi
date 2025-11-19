@@ -3,9 +3,13 @@ package com.example.loomi.infrastructure.JPAEntities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.loomi.domain.OrderStatus;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,6 +24,10 @@ public class OrderEntity {
 
     @Column(name = "customer_id", nullable = false)
     private String customerId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private OrderStatus status = OrderStatus.PENDING;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items = new ArrayList<>();
@@ -46,6 +54,14 @@ public class OrderEntity {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
     public List<OrderItemEntity> getItems() {
