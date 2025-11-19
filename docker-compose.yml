@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - ./create_stuff.sql:/docker-entrypoint-initdb.d/create_stuff.sql
+    environment:
+      POSTGRES_DB: "loomi"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "5432:5432"
