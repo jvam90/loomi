@@ -6,10 +6,10 @@ public class Order {
 
     private String orderId;
     private String customerId;
-    private List<Item> items;
+    private List<OrderItem> items;
     private OrderStatus status;
 
-    public Order(String orderId, String customerId, List<Item> items, OrderStatus status) {
+    public Order(String orderId, String customerId, List<OrderItem> items, OrderStatus status) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.items = items;
@@ -32,11 +32,11 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public List<Item> getItems() {
+    public List<OrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<OrderItem> items) {
         this.items = items;
     }
 
