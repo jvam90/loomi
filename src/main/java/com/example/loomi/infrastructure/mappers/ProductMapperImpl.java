@@ -2,6 +2,7 @@ package com.example.loomi.infrastructure.mappers;
 
 import org.springframework.stereotype.Component;
 
+import com.example.loomi.api.dtos.ProductDto;
 import com.example.loomi.domain.Metadata;
 import com.example.loomi.domain.Product;
 import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
@@ -17,6 +18,7 @@ public class ProductMapperImpl implements IProductMapper {
             entity.getProductType(),
             entity.getPrice(),
             entity.getStockQuantity(),
+            entity.isActive(),
            new Metadata(
                 entity.getMetadata().releaseDate(),
                 entity.getMetadata().preOrderSlots(),
@@ -29,6 +31,22 @@ public class ProductMapperImpl implements IProductMapper {
     public ProductEntity toJPAEntity(Product product) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'toJPAEntity'");
+    }
+
+    @Override
+    public ProductDto toDto(ProductEntity productEntity) {
+        return new ProductDto(
+            productEntity.getName(),
+            productEntity.getProductType(),
+            productEntity.getPrice(),
+            productEntity.getStockQuantity(),
+            productEntity.isActive(),
+           new Metadata(
+                productEntity.getMetadata().releaseDate(),
+                productEntity.getMetadata().preOrderSlots(),
+                productEntity.getMetadata().licenses()
+            )
+        );
     }
     
 }
