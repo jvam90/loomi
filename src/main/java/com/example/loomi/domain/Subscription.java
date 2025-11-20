@@ -17,11 +17,14 @@ public class Subscription {
     public Subscription() {
     }
 
-    public Subscription(CustomerEntity customer, LocalDate endDate, String productId, LocalDate startDate, BigDecimal unitPrice) {
+    public Subscription(CustomerEntity customer, String productId, LocalDate startDate, LocalDate endDate,
+            SubscriptionStatus status,
+            BigDecimal unitPrice) {
         this.customer = customer;
-        this.endDate = endDate;
         this.productId = productId;
         this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
         this.unitPrice = unitPrice;
     }
 
@@ -81,5 +84,4 @@ public class Subscription {
         this.unitPrice = unitPrice;
     }
 
-    
 }
