@@ -8,4 +8,5 @@ import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 public interface  CustomersService {
     List<CustomerEntity> getAllCustomers();
     Optional<CustomerEntity> getCustomerById(String customerId);
+    CustomerEntity createCustomer(CustomerEntity customer);
 }

@@ -1,7 +1,10 @@
 package com.example.loomi.api.services;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -32,5 +35,17 @@ public class CustomersServiceImpl implements CustomersService {
 
         return customer;
     }
-    
+
+    @Override
+    public CustomerEntity createCustomer(CustomerEntity customer) {
+        if (customer.getCustomerId() != null && !customer.getCustomerId().isEmpty()) {
+            throw new IllegalArgumentException("Customer ID must be null or empty when creating a new customer");
+        }
+
+        customer.setCustomerId(UUID.randomUUID().toString());
+        customer.setCreatedAt(OffsetDateTime.now());
+        customer.setSubscriptions(new ArrayList<>());
+        return customersRepository.save(customer);
+    }
+
 }
