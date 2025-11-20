@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 
 public class Subscription {
-    private Long id;
+    private Long subscriptionId;
     private CustomerEntity customer;
     private String productId;
     private LocalDate startDate;
@@ -25,12 +25,12 @@ public class Subscription {
         this.unitPrice = unitPrice;
     }
 
-    public Long getId() {
-        return id;
+    public Long getSubscriptionId() {
+        return subscriptionId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
     public CustomerEntity getCustomer() {
