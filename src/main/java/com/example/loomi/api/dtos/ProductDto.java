@@ -6,6 +6,7 @@ import com.example.loomi.domain.Metadata;
 import com.example.loomi.domain.ProductType;
 
 public class ProductDto {
+    private String productId;
     private String name;
     private ProductType productType;
     private BigDecimal price;
@@ -16,7 +17,7 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(String name, ProductType productType, BigDecimal price, Integer stockQuantity,
+    public ProductDto(String productId, String name, ProductType productType, BigDecimal price, Integer stockQuantity,
             boolean active,
             Metadata metadata) {
         this.name = name;
@@ -25,6 +26,14 @@ public class ProductDto {
         this.stockQuantity = stockQuantity;
         this.active = active;
         this.metadata = metadata;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getName() {
