@@ -3,11 +3,9 @@ package com.example.loomi.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
-
 public class Subscription {
     private Long subscriptionId;
-    private CustomerEntity customer;
+    private Customer customer;
     private String productId;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -17,7 +15,7 @@ public class Subscription {
     public Subscription() {
     }
 
-    public Subscription(CustomerEntity customer, String productId, LocalDate startDate, LocalDate endDate,
+    public Subscription(Customer customer, String productId, LocalDate startDate, LocalDate endDate,
             SubscriptionStatus status,
             BigDecimal unitPrice) {
         this.customer = customer;
@@ -36,11 +34,11 @@ public class Subscription {
         this.subscriptionId = subscriptionId;
     }
 
-    public CustomerEntity getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(CustomerEntity customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
