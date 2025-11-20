@@ -1,7 +1,6 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -18,25 +17,28 @@ public class CustomerEntity {
     @Column(name = "customer_id", nullable = false)
     private String customerId;
 
-    @Column(name = "name", nullable = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "customer")
-    private List<SubscriptionEntity> subscriptions = new ArrayList<>();
+    private List<SubscriptionEntity> subscriptions;
 
     public CustomerEntity() {
     }
 
-    public CustomerEntity(String customerId, String name, String email) {
+    public CustomerEntity(String customerId, String name, String email, OffsetDateTime createdAt,
+            List<SubscriptionEntity> subscriptions) {
         this.customerId = customerId;
         this.name = name;
         this.email = email;
+        this.createdAt = createdAt;
+        this.subscriptions = subscriptions;
     }
 
     public String getCustomerId() {
