@@ -138,4 +138,20 @@ public class ProductEntity {
         this.version = version;
     }
 
+    public Integer getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(Integer licenses) {
+        this.licenses = licenses;
+    }
+
+    public Integer getPreOrderSlots() {
+        return preOrderSlots;
+    }
+
+    public void setPreOrderSlots(Integer preOrderSlots) {
+        this.preOrderSlots = preOrderSlots;
+    }
+
 }
