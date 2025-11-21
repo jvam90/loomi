@@ -11,14 +11,17 @@ public class Product {
     private BigDecimal price;
     private Integer stockQuantity;
     private boolean active = true;
+
     private Metadata metadata;
+    private Integer licenses;
+    private Integer preOrderSlots;
 
     public Product() {
     }
 
     public Product(String productId, String name, ProductType productType, BigDecimal price, Integer stockQuantity,
             boolean active,
-            Metadata metadata) {
+            Metadata metadata, Integer licenses, Integer preOrderSlots) {
         this.productId = productId;
         this.name = name;
         this.productType = productType;
@@ -26,6 +29,8 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.active = active;
         this.metadata = metadata;
+        this.licenses = licenses;
+        this.preOrderSlots = preOrderSlots;
     }
 
     public String getProductId() {
@@ -82,6 +87,22 @@ public class Product {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
+    }
+
+    public Integer getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(Integer licenses) {
+        this.licenses = licenses;
+    }
+
+    public Integer getPreOrderSlots() {
+        return preOrderSlots;
+    }
+
+    public void setPreOrderSlots(Integer preOrderSlots) {
+        this.preOrderSlots = preOrderSlots;
     }
 
 }
