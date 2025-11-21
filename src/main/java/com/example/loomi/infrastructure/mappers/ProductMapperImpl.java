@@ -28,14 +28,9 @@ public class ProductMapperImpl implements IProductMapper {
     }
 
     @Override
-    public ProductEntity toJPAEntity(Product product) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toJPAEntity'");
-    }
-
-    @Override
     public ProductDto toDto(ProductEntity productEntity) {
         return new ProductDto(
+            productEntity.getProductId(),
             productEntity.getName(),
             productEntity.getProductType(),
             productEntity.getPrice(),
