@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 
 import com.example.loomi.api.dtos.CustomerDto;
 import com.example.loomi.api.dtos.SubscriptionDto;
-import com.example.loomi.domain.Customer;
-import com.example.loomi.domain.Subscription;
+import com.example.loomi.domain.Entities.Customer;
+import com.example.loomi.domain.Entities.Subscription;
 import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 
 @Component
