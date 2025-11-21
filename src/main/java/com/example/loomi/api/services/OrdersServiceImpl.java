@@ -1,7 +1,9 @@
 package com.example.loomi.api.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -11,6 +13,7 @@ import com.example.loomi.api.Validation.ProductValidationException;
 import com.example.loomi.domain.Enums.ProductType;
 import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
+import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
 import com.example.loomi.infrastructure.Repositories.CustomerRepository;
 import com.example.loomi.infrastructure.Repositories.OrderRepository;
 import com.example.loomi.infrastructure.Repositories.ProductRepository;
@@ -98,6 +101,9 @@ public class OrdersServiceImpl implements OrdersService {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
 
+        getAmountCorporativeItemsInOrder(orderEntity);
+
+        orderEntity.setTotal(new BigDecimal(0));
         // validate each item using the registered validators
         for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
 
@@ -115,6 +121,7 @@ public class OrdersServiceImpl implements OrdersService {
                         "Invalid quantity for product ID: " + orderItemEntity.getProduct().getProductId());
             }
 
+            orderItemEntity.setProduct(productEntity.get());
             productValidatorFactory.get(orderItemEntity.getProduct().getProductType()).validate(orderItemEntity);
 
             Integer productStock = 0;
@@ -137,13 +144,48 @@ public class OrdersServiceImpl implements OrdersService {
             if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
                 productStock = productEntity.get().getLicenses();
                 productEntity.get().setLicenses(productStock - orderRequestedAmount);
+                // salvar a chave de ativacao
+                orderItemEntity.setActivationKey(UUID.randomUUID().toString());
             }
 
             orderItemEntity.setOrder(orderEntity);
+            orderItemEntity.setUnitPrice(productEntity.get().getPrice());
+
+            orderEntity.setTotal(orderEntity.getTotal().add(calculateTotalPrice(productEntity, orderRequestedAmount)));
+
             productRepository.save(productEntity.get());
         }
-
+        orderEntity.setOrderId(UUID.randomUUID().toString());
         return orderRepository.save(orderEntity);
+    }
+
+    // Um pedido corporativo não pode conter outros tipos de produtos
+    private void getAmountCorporativeItemsInOrder(OrderEntity orderEntity) {
+        int amountCorporativeItemsInOrder = 0;
+        for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
+            var productEntity = productRepository.findById(orderItemEntity.getProduct().getProductId());
+            if (!productEntity.isEmpty() && productEntity.get().getProductType().equals(ProductType.CORPORATE)) {
+                amountCorporativeItemsInOrder += 1;
+            }
+        }
+
+        if (amountCorporativeItemsInOrder > 0 &&
+                amountCorporativeItemsInOrder != orderEntity.getItems().size()) {
+            throw new IllegalArgumentException(
+                    "Mixed orders with corporative and non-corporative products are not allowed.");
+        }
+    }
+
+    private BigDecimal calculateTotalPrice(Optional<ProductEntity> productEntity, Integer orderRequestedAmount) {
+        if (productEntity.get().getProductType().equals(ProductType.CORPORATE)
+                && orderRequestedAmount >= 100) {
+            return productEntity.get().getPrice()
+                    .multiply(BigDecimal.valueOf(orderRequestedAmount))
+                    .multiply(BigDecimal.valueOf(0.85)); // 15% disconto
+        } else {
+            return productEntity.get().getPrice()
+                    .multiply(BigDecimal.valueOf(orderRequestedAmount));
+        }
     }
 
     private boolean isProductCorporateWithStock(OrderItemEntity orderItemEntity) {
