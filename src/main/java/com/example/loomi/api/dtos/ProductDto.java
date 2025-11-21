@@ -3,7 +3,6 @@ package com.example.loomi.api.dtos;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.example.loomi.domain.Entities.Metadata;
 import com.example.loomi.domain.Enums.ProductType;
 
 public class ProductDto {
