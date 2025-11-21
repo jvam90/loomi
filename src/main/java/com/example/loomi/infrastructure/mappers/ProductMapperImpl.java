@@ -3,8 +3,8 @@ package com.example.loomi.infrastructure.mappers;
 import org.springframework.stereotype.Component;
 
 import com.example.loomi.api.dtos.ProductDto;
-import com.example.loomi.domain.Metadata;
-import com.example.loomi.domain.Product;
+import com.example.loomi.domain.Entities.Metadata;
+import com.example.loomi.domain.Entities.Product;
 import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
 
 @Component
