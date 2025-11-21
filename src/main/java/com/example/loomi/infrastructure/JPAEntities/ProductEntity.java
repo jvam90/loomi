@@ -15,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import jakarta.persistence.Table;
 
 @Entity
@@ -46,12 +47,22 @@ public class ProductEntity {
     @Column(name = "metadata", columnDefinition = "jsonb", nullable = true)
     private Metadata metadata;
 
+    @Column(name = "licenses", nullable = true)
+    private Integer licenses;
+
+    @Column(name = "pre_order_slots", nullable = true)
+    private Integer preOrderSlots;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     public ProductEntity() {
     }
 
     public ProductEntity(String productId, String name, ProductType productType, BigDecimal price,
             Integer stockQuantity, boolean active,
-            Metadata metadata) {
+            Metadata metadata, Integer licenses, Integer preOrderSlots) {
         this.productId = productId;
         this.name = name;
         this.productType = productType;
@@ -59,6 +70,8 @@ public class ProductEntity {
         this.stockQuantity = stockQuantity;
         this.active = active;
         this.metadata = metadata;
+        this.licenses = licenses;
+        this.preOrderSlots = preOrderSlots;
     }
 
     public String getProductId() {
@@ -115,6 +128,14 @@ public class ProductEntity {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
 }
