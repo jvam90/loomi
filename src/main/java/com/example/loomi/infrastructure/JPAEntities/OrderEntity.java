@@ -1,5 +1,6 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items = new ArrayList<>();
+
+    @Column(name = "total", nullable = false)
+    private BigDecimal total;
 
     public OrderEntity() {
     }
@@ -80,6 +84,14 @@ public class OrderEntity {
     public void removeItem(OrderItemEntity item) {
         items.remove(item);
         item.setOrder(null);
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
 }
