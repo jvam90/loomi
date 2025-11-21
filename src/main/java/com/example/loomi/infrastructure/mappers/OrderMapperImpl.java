@@ -43,13 +43,14 @@ public class OrderMapperImpl implements IOrderMapper {
         Order order = new Order(entity.getOrderId(), entity.getCustomerId(), items, entity.getStatus());
 
         if (entity.getItems() != null) {
-            for (OrderItemEntity ie : entity.getItems()) {
-                var productEntity = ie.getProduct();
+            for (OrderItemEntity orderItemEntity : entity.getItems()) {
+                var productEntity = orderItemEntity.getProduct();
                 var product = productMapper.toDomainProduct(productEntity);
-                OrderItem oi = new OrderItem(product, ie.getQuantity(), ie.getUnitPrice());
-                oi.setId(ie.getId());
-                oi.setOrder(order);
-                items.add(oi);
+                OrderItem orderItem = new OrderItem(product, orderItemEntity.getQuantity(),
+                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey());
+                orderItem.setId(orderItemEntity.getId());
+                orderItem.setOrder(order);
+                items.add(orderItem);
             }
         }
 
@@ -65,7 +66,7 @@ public class OrderMapperImpl implements IOrderMapper {
         if (orderDto.getItems() != null) {
             for (OrderItemDto orderItemDto : orderDto.getItems()) {
                 OrderItemEntity orderItemEntity = new OrderItemEntity();
-                //não setamos o id do item aqui, pois é gerado pelo banco                
+                // não setamos o id do item aqui, pois é gerado pelo banco
                 ProductEntity productEntity = new ProductEntity();
                 if (orderItemDto.getProduct() != null) {
                     productEntity.setProductId(orderItemDto.getProduct().getProductId());
@@ -88,10 +89,11 @@ public class OrderMapperImpl implements IOrderMapper {
         OrderDto dto = new OrderDto(orderEntity.getCustomerId(), itemDtos, orderEntity.getStatus());
 
         if (orderEntity.getItems() != null) {
-            for (OrderItemEntity ie : orderEntity.getItems()) {
-                ProductDto pdto = productMapper.toDto(ie.getProduct());
-                OrderItemDto oidto = new OrderItemDto(dto, pdto, ie.getQuantity(), ie.getUnitPrice());
-                itemDtos.add(oidto);
+            for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
+                ProductDto pdto = productMapper.toDto(orderItemEntity.getProduct());
+                OrderItemDto orderItemdto = new OrderItemDto(dto, pdto, orderItemEntity.getQuantity(),
+                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey());
+                itemDtos.add(orderItemdto);
             }
         }
 
