@@ -1,0 +1,29 @@
+# Multi-stage Dockerfile targeting Java 21
+# Uses Temurin 21 JDK to build and Temurin 21 JRE as a small runtime image.
+# Note: there is no widely-used official distroless Java 21 image at this time.
+# If you require a true distroless runtime, consider producing a custom jlink image
+# or building with GraalVM native-image.
+
+# Builder stage
+FROM maven:3.9.8-eclipse-temurin-21 AS builder
+WORKDIR /workspace
+
+# Cache dependencies
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+RUN mvn -B -ntp dependency:go-offline
+
+# Copy sources and build
+COPY src ./src
+RUN mvn -B -ntp -DskipTests package
+
+# Runtime stage: Temurin 21 JRE (smaller than full JDK)
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+# Copy artifact
+COPY --from=builder /workspace/target/loomi-0.0.1-SNAPSHOT.jar /app/app.jar
+
+EXPOSE 8080
+ENV JAVA_OPTS="-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
