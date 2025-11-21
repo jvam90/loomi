@@ -1,6 +1,7 @@
 package com.example.loomi.domain.Entities;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class OrderItem {
 
@@ -8,16 +9,18 @@ public class OrderItem {
     private Order order;
     private Product product;
     private Integer quantity;
-    //para snapshot de preço
+    // para snapshot de preço
     private BigDecimal unitPrice;
+    private UUID activationKey;
 
     public OrderItem() {
     }
 
-    public OrderItem(Product product, Integer quantity, BigDecimal unitPrice) {
+    public OrderItem(Product product, Integer quantity, BigDecimal unitPrice, UUID activationKey) {
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.activationKey = activationKey;
     }
 
     public Long getId() {
@@ -58,6 +61,14 @@ public class OrderItem {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public UUID getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(UUID activationKey) {
+        this.activationKey = activationKey;
     }
 
 }

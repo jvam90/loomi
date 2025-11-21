@@ -1,6 +1,7 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
@@ -44,6 +45,10 @@ public class OrderItemEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb", nullable = true)
     private Metadata metadata;
+
+    @Column(name = "activation_key", nullable = true)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID activationKey;
 
     public OrderItemEntity() {
     }
@@ -100,6 +105,14 @@ public class OrderItemEntity {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
+    }
+
+    public UUID getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(UUID activationKey) {
+        this.activationKey = activationKey;
     }
 
 }
