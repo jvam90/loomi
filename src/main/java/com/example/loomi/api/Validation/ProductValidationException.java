@@ -1,6 +1,6 @@
-package com.example.loomi.domain.Validation;
+package com.example.loomi.api.Validation;
 
-public class ProductValidationException extends Exception {
+public class ProductValidationException extends RuntimeException {
     public ProductValidationException(String message) {
         super(message);
     }

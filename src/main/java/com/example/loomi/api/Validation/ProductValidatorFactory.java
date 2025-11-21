@@ -1,4 +1,4 @@
-package com.example.loomi.domain.Validation;
+package com.example.loomi.api.Validation;
 
 import java.util.EnumMap;
 import java.util.List;

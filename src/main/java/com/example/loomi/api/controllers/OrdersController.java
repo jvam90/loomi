@@ -14,7 +14,6 @@ import com.example.loomi.api.dtos.OrderDto;
 import com.example.loomi.api.services.OrdersService;
 import com.example.loomi.infrastructure.mappers.IOrderMapper;
 
-
 @RestController
 @RequestMapping(path = "/api/orders")
 public class OrdersController {
@@ -43,8 +42,8 @@ public class OrdersController {
 
     @PostMapping()
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
-        return null;
+        var orderEntity = ordersService.createOrder(orderMapper.toJPAEntityFromDto(orderDto));
+        return orderMapper.toDto(orderEntity);
     }
-    
 
 }
