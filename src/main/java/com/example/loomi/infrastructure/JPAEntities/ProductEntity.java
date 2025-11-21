@@ -6,8 +6,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
-import com.example.loomi.domain.Metadata;
-import com.example.loomi.domain.ProductType;
+import com.example.loomi.domain.Entities.Metadata;
+import com.example.loomi.domain.Enums.ProductType;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
