@@ -4,28 +4,33 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import com.example.loomi.api.Validation.ProductValidatorFactory;
+import com.example.loomi.api.Validation.ProductValidationException;
+import com.example.loomi.domain.Enums.ProductType;
 import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
 import com.example.loomi.infrastructure.Repositories.CustomerRepository;
 import com.example.loomi.infrastructure.Repositories.OrderRepository;
-import com.example.loomi.infrastructure.mappers.IProductMapper;
+import com.example.loomi.infrastructure.Repositories.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
     private final ProductValidatorFactory productValidatorFactory;
-    private final IProductMapper productMapper;
 
     public OrdersServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository,
-            ProductValidatorFactory productValidatorFactory, IProductMapper productMapper) {
+            ProductRepository productRepository, ProductValidatorFactory productValidatorFactory) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
         this.productValidatorFactory = productValidatorFactory;
-        this.productMapper = productMapper;
     }
 
     @Override
@@ -54,8 +59,33 @@ public class OrdersServiceImpl implements OrdersService {
         return customerOrder;
     }
 
+    // Use optimistic locking with retries to avoid oversell under concurrency
     @Override
     public OrderEntity createOrder(OrderEntity orderEntity) {
+        final int maxAttempts = 3;
+        int attempts = 0;
+        while (true) {
+            try {
+                return doCreateOrderTransactional(orderEntity);
+            } catch (OptimisticLockingFailureException ex) {
+                attempts++;
+                if (attempts >= maxAttempts) {
+                    throw new ProductValidationException(
+                            "Could not reserve stock due to concurrent updates. Please try again.");
+                }
+                // small backoff before retrying
+                try {
+                    Thread.sleep(50L * attempts);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new ProductValidationException("Interrupted while retrying order creation", ie);
+                }
+            }
+        }
+    }
+
+    @Transactional
+    private OrderEntity doCreateOrderTransactional(OrderEntity orderEntity) {
         if (!customerRepository.existsById(orderEntity.getCustomerId())) {
             throw new IllegalArgumentException("Customer with ID " + orderEntity.getCustomerId() + " does not exist.");
         }
@@ -69,19 +99,56 @@ public class OrdersServiceImpl implements OrdersService {
         }
 
         // validate each item using the registered validators
-        for (OrderItemEntity orderItem : orderEntity.getItems()) {
-            if (orderItem.getProduct() == null) {
-                throw new IllegalArgumentException("Order item must have a product.");
+        for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
+
+            String requestedProductId = orderItemEntity.getProduct().getProductId();
+            int orderRequestedAmount = orderItemEntity.getQuantity() == null ? 0 : orderItemEntity.getQuantity();
+            var productEntity = productRepository.findById(requestedProductId);
+
+            if (productEntity.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "Product with ID " + requestedProductId + " does not exist.");
             }
 
-            // productValidatorFactory.get(orderItem.getProduct().getProductType()).validate(orderItem);
+            if (orderItemEntity.getQuantity() == null || orderItemEntity.getQuantity() <= 0) {
+                throw new IllegalArgumentException(
+                        "Invalid quantity for product ID: " + orderItemEntity.getProduct().getProductId());
+            }
 
-            // ensure bidirectional relationship for cascade save
-            orderItem.setOrder(orderEntity);
+            productValidatorFactory.get(orderItemEntity.getProduct().getProductType()).validate(orderItemEntity);
+
+            Integer productStock = 0;
+
+            // para produtos físicos e quando for corporativo com quantidade especificada,
+            // a quantidade está em stockQuantity
+            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PHYSICAL)
+                    || isProductCorporateWithStock(orderItemEntity)) {
+                productStock = productEntity.get().getStockQuantity();
+                productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
+            }
+
+            // para pré-venda a quantiadade está em preOrderSlots
+            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
+                productStock = productEntity.get().getPreOrderSlots();
+                productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
+            }
+
+            // para digital a quantiadade está em licenses
+            if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
+                productStock = productEntity.get().getLicenses();
+                productEntity.get().setLicenses(productStock - orderRequestedAmount);
+            }
+
+            orderItemEntity.setOrder(orderEntity);
+            productRepository.save(productEntity.get());
         }
 
-        // persist the order (cascade will save items)
         return orderRepository.save(orderEntity);
+    }
+
+    private boolean isProductCorporateWithStock(OrderItemEntity orderItemEntity) {
+        return orderItemEntity.getProduct().getProductType().equals(ProductType.CORPORATE)
+                && orderItemEntity.getQuantity() != null && orderItemEntity.getQuantity() > 0;
     }
 
 }
