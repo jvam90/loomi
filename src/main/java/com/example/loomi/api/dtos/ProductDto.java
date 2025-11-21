@@ -13,19 +13,23 @@ public class ProductDto {
     private Integer stockQuantity;
     private boolean active = true;
     private Metadata metadata;
+    private Integer licenses;
+    private Integer preOrderSlots;
 
     public ProductDto() {
     }
 
     public ProductDto(String productId, String name, ProductType productType, BigDecimal price, Integer stockQuantity,
             boolean active,
-            Metadata metadata) {
+            Metadata metadata, Integer licenses, Integer preOrderSlots) {
         this.name = name;
         this.productType = productType;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.active = active;
         this.metadata = metadata;
+        this.licenses = licenses;
+        this.preOrderSlots = preOrderSlots;
     }
 
     public String getProductId() {
@@ -82,5 +86,21 @@ public class ProductDto {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
+    }
+
+    public Integer getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(Integer licenses) {
+        this.licenses = licenses;
+    }
+
+    public Integer getPreOrderSlots() {
+        return preOrderSlots;
+    }
+
+    public void setPreOrderSlots(Integer preOrderSlots) {
+        this.preOrderSlots = preOrderSlots;
     }
 }
