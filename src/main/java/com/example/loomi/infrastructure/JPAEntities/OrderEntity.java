@@ -3,7 +3,7 @@ package com.example.loomi.infrastructure.JPAEntities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.loomi.domain.OrderStatus;
+import com.example.loomi.domain.Enums.OrderStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

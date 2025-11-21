@@ -5,8 +5,12 @@ import java.util.Optional;
 
 import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 
-public interface  CustomersService {
+public interface CustomersService {
     List<CustomerEntity> getAllCustomers();
+
     Optional<CustomerEntity> getCustomerById(String customerId);
+
+    Optional<CustomerEntity> getCustomerByEmail(String email);
+
     CustomerEntity createCustomer(CustomerEntity customer);
 }

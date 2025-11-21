@@ -1,7 +1,15 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
+
+import com.example.loomi.domain.Entities.Metadata;
+
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +40,15 @@ public class OrderItemEntity {
 
     @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
+
+    @Type(JsonBinaryType.class)
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "metadata", columnDefinition = "jsonb", nullable = true)
+    private Metadata metadata;
+
+    @Column(name = "activation_key", nullable = true)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID activationKey;
 
     public OrderItemEntity() {
     }
@@ -80,6 +97,22 @@ public class OrderItemEntity {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
+
+    public UUID getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(UUID activationKey) {
+        this.activationKey = activationKey;
     }
 
 }

@@ -1,6 +1,8 @@
-package com.example.loomi.domain;
+package com.example.loomi.domain.Entities;
 
 import java.util.List;
+
+import com.example.loomi.domain.Enums.OrderStatus;
 
 public class Order {
 

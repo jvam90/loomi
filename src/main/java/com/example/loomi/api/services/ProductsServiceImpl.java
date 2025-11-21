@@ -30,11 +30,26 @@ public class ProductsServiceImpl implements ProductsService {
             throw new IllegalArgumentException("Product not found");
         }
 
-        if(product.get().isActive() == false) {
-            throw  new IllegalArgumentException("Product is inactive");
+        if (product.get().isActive() == false) {
+            throw new IllegalArgumentException("Product is inactive");
         }
 
         return product;
     }
-    
+
+    @Override
+    public Optional<ProductEntity> findByProductIdForUpdate(String productId) {
+        var product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException("Product not found");
+        }
+
+        if (product.get().isActive() == false) {
+            throw new IllegalArgumentException("Product is inactive");
+        }
+
+        return product;
+    }
+
 }

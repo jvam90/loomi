@@ -14,7 +14,6 @@ import com.example.loomi.api.dtos.CustomerDto;
 import com.example.loomi.api.services.CustomersService;
 import com.example.loomi.infrastructure.mappers.ICustomerMapper;
 
-
 @RestController
 @RequestMapping("/api/customers")
 public class CustomersController {
@@ -32,7 +31,7 @@ public class CustomersController {
         return customerService.getAllCustomers().stream().map(customerMapper::toDto).toList();
     }
 
-     @GetMapping("/{customerId}")
+    @GetMapping("/{customerId}")
     public Optional<CustomerDto> getCustomerById(@PathVariable("customerId") String customerId) {
         return customerService.getCustomerById(customerId).map(customerMapper::toDto);
     }
@@ -42,6 +41,10 @@ public class CustomersController {
         var customerEntity = customerService.createCustomer(customerMapper.toJPAEntityFromDto(entity));
         return customerMapper.toDto(customerEntity);
     }
-    
+
+    @GetMapping("/email/{customerEmail}")
+    public Optional<CustomerDto> getCustomerByEmail(@PathVariable("customerEmail") String customerEmail) {
+        return customerService.getCustomerByEmail(customerEmail).map(customerMapper::toDto);
+    }
 
 }

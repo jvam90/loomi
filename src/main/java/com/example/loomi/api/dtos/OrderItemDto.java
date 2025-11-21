@@ -1,22 +1,26 @@
 package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class OrderItemDto {
     private OrderDto order;
     private ProductDto product;
     private Integer quantity;
-    //para snapshot de preço
+    // para snapshot de preço
     private BigDecimal unitPrice;
+    private UUID activationKey;
 
     public OrderItemDto() {
     }
 
-    public OrderItemDto(OrderDto order, ProductDto product, Integer quantity, BigDecimal unitPrice) {
+    public OrderItemDto(OrderDto order, ProductDto product, Integer quantity, BigDecimal unitPrice,
+            UUID activationKey) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.activationKey = activationKey;
     }
 
     public OrderDto getOrder() {
@@ -51,6 +55,12 @@ public class OrderItemDto {
         this.unitPrice = unitPrice;
     }
 
+    public UUID getActivationKey() {
+        return activationKey;
+    }
 
+    public void setActivationKey(UUID activationKey) {
+        this.activationKey = activationKey;
+    }
 
 }

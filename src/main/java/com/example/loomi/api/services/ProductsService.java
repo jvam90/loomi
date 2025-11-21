@@ -7,5 +7,8 @@ import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
 
 public interface ProductsService {
     List<ProductEntity> getAllProducts();
+
     Optional<ProductEntity> getProductById(String productId);
+
+    Optional<ProductEntity> findByProductIdForUpdate(String productId);
 }

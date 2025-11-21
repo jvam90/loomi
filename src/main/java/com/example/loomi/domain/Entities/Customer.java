@@ -1,4 +1,4 @@
-package com.example.loomi.domain;
+package com.example.loomi.domain.Entities;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

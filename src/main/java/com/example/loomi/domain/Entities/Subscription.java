@@ -1,7 +1,9 @@
-package com.example.loomi.domain;
+package com.example.loomi.domain.Entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.example.loomi.domain.Enums.SubscriptionStatus;
 
 public class Subscription {
     private Long subscriptionId;

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.loomi.domain.SubscriptionStatus;
+import com.example.loomi.domain.Enums.SubscriptionStatus;
 import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 import com.example.loomi.infrastructure.JPAEntities.SubscriptionEntity;
 import com.example.loomi.infrastructure.Repositories.CustomerRepository;
