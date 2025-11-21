@@ -2,8 +2,8 @@ package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
 
-import com.example.loomi.domain.Metadata;
-import com.example.loomi.domain.ProductType;
+import com.example.loomi.domain.Entities.Metadata;
+import com.example.loomi.domain.Enums.ProductType;
 
 public class ProductDto {
     private String productId;

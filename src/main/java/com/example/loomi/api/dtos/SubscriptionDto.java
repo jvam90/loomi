@@ -3,7 +3,7 @@ package com.example.loomi.api.dtos;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.example.loomi.domain.SubscriptionStatus;
+import com.example.loomi.domain.Enums.SubscriptionStatus;
 
 public class SubscriptionDto {
     private CustomerDto customer;

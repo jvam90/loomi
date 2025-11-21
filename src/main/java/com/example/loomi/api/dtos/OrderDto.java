@@ -2,7 +2,7 @@ package com.example.loomi.api.dtos;
 
 import java.util.List;
 
-import com.example.loomi.domain.OrderStatus;
+import com.example.loomi.domain.Enums.OrderStatus;
 
 public class OrderDto {
     private String customerId;
