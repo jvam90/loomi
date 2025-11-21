@@ -17,5 +17,6 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, String
     @Query("select c from CustomerEntity c where c.customerId = :id")
     Optional<CustomerEntity> findByIdForUpdate(@Param("id") String id);
 
-}
+    Optional<CustomerEntity> findByEmail(String email);
 
+}

@@ -30,7 +30,7 @@ public class CustomersServiceImpl implements CustomersService {
         var customer = customersRepository.findById(customerId);
 
         if (customer.isEmpty()) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new IllegalArgumentException("Customer not found with ID: " + customerId);
         }
 
         return customer;
@@ -42,10 +42,25 @@ public class CustomersServiceImpl implements CustomersService {
             throw new IllegalArgumentException("Customer ID must be null or empty when creating a new customer");
         }
 
+        if (!customersRepository.findByEmail(customer.getEmail()).isEmpty()) {
+            throw new IllegalArgumentException("Customer with Email " + customer.getEmail() + " already exists.");
+        }
+
         customer.setCustomerId(UUID.randomUUID().toString());
         customer.setCreatedAt(OffsetDateTime.now());
         customer.setSubscriptions(new ArrayList<>());
         return customersRepository.save(customer);
+    }
+
+    @Override
+    public Optional<CustomerEntity> getCustomerByEmail(String email) {
+        var customer = customersRepository.findByEmail(email);
+
+        if (customer.isEmpty()) {
+            throw new IllegalArgumentException("Customer not found with email: " + email);
+        }
+
+        return customer;
     }
 
 }
