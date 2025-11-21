@@ -1,9 +1,12 @@
 package com.example.loomi.api.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,11 +15,10 @@ import com.example.loomi.api.services.OrdersService;
 import com.example.loomi.infrastructure.mappers.IOrderMapper;
 
 
-
 @RestController
 @RequestMapping(path = "/api/orders")
 public class OrdersController {
-    
+
     private final OrdersService ordersService;
     private final IOrderMapper orderMapper;
 
@@ -31,5 +33,18 @@ public class OrdersController {
                 .map(orderMapper::toDto)
                 .toList();
     }
+
+    @GetMapping("/{customerId}/{orderId}")
+    public Optional<OrderDto> findByIdAndCustomerId(@PathVariable("customerId") String customerId,
+            @PathVariable("orderId") String orderId) {
+        return ordersService.findByIdAndCustomerId(customerId, orderId)
+                .map(orderMapper::toDto);
+    }
+
+    @PostMapping()
+    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
+        return null;
+    }
+    
 
 }
