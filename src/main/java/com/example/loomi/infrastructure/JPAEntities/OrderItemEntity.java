@@ -1,13 +1,11 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.Map;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
-
-import com.example.loomi.domain.Entities.Metadata;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
@@ -44,11 +42,10 @@ public class OrderItemEntity {
     @Type(JsonBinaryType.class)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb", nullable = true)
-    private Metadata metadata;
+    private Map<String, Object> metadata;
 
     @Column(name = "activation_key", nullable = true)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID activationKey;
+    private String activationKey;
 
     public OrderItemEntity() {
     }
@@ -99,19 +96,19 @@ public class OrderItemEntity {
         this.unitPrice = unitPrice;
     }
 
-    public Metadata getMetadata() {
+    public Map<String, Object> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Metadata metadata) {
+    public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 
-    public UUID getActivationKey() {
+    public String getActivationKey() {
         return activationKey;
     }
 
-    public void setActivationKey(UUID activationKey) {
+    public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
     }
 
