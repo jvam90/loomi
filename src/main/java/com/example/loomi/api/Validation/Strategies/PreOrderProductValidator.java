@@ -6,7 +6,7 @@ import com.example.loomi.api.Validation.ProductValidationException;
 import com.example.loomi.api.Validation.ProductValidator;
 import com.example.loomi.domain.Entities.Product;
 import com.example.loomi.domain.Enums.ProductType;
-import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
+import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
 
 @Component
 public class PreOrderProductValidator implements ProductValidator {
@@ -19,6 +19,12 @@ public class PreOrderProductValidator implements ProductValidator {
     @Override
     public void validate(Product product) throws ProductValidationException {
         // validações para produtos de pré-venda
+    }
+
+    @Override
+    public void validate(OrderItemEntity orderItemEntity) throws ProductValidationException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validate'");
     }
 
 }
