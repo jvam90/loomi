@@ -11,5 +11,5 @@ import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, String> {
     List<OrderEntity> findByCustomerId(String customerId);
-    Optional<OrderEntity> findByIdAndCustomerId(String orderId, String customerId);
+    Optional<OrderEntity> findByOrderIdAndCustomerId(String orderId, String customerId);
 }

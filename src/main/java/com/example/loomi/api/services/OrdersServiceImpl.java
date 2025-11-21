@@ -36,7 +36,7 @@ public class OrdersServiceImpl implements OrdersService {
             throw new IllegalArgumentException("Customer with ID " + customerId + " does not exist.");
         }
 
-        var customerOrder = orderRepository.findByIdAndCustomerId(orderId, customerId);
+        var customerOrder = orderRepository.findByOrderIdAndCustomerId(orderId, customerId);
 
         if (customerOrder.isEmpty()) {
             throw new IllegalArgumentException(
