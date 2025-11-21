@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import com.example.loomi.api.dtos.OrderDto;
 import com.example.loomi.api.dtos.OrderItemDto;
 import com.example.loomi.api.dtos.ProductDto;
-import com.example.loomi.domain.Order;
-import com.example.loomi.domain.OrderItem;
-import com.example.loomi.domain.OrderStatus;
+import com.example.loomi.domain.Entities.Order;
+import com.example.loomi.domain.Entities.OrderItem;
+import com.example.loomi.domain.Enums.OrderStatus;
 import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
 import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
@@ -57,28 +57,29 @@ public class OrderMapperImpl implements IOrderMapper {
     }
 
     @Override
-    public OrderEntity toJPAEntity(Order order) {
-        OrderEntity entity = new OrderEntity(order.getOrderId(), order.getCustomerId());
-        entity.setStatus(order.getStatus() != null ? order.getStatus() : OrderStatus.PENDING);
+    public OrderEntity toJPAEntityFromDto(OrderDto orderDto) {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setStatus(orderDto.getStatus() != null ? orderDto.getStatus() : OrderStatus.PENDING);
+        orderEntity.setCustomerId(orderDto.getCustomerId());
 
-        if (order.getItems() != null) {
-            for (OrderItem oi : order.getItems()) {
-                OrderItemEntity ie = new OrderItemEntity();
-                ie.setId(oi.getId());
-                // create minimal ProductEntity reference (only id) to avoid depending on full
-                // product mapper
-                ProductEntity pe = new ProductEntity();
-                if (oi.getProduct() != null) {
-                    pe.setProductId(oi.getProduct().getProductId());
+        if (orderDto.getItems() != null) {
+            for (OrderItemDto orderItemDto : orderDto.getItems()) {
+                OrderItemEntity orderItemEntity = new OrderItemEntity();
+                //não setamos o id do item aqui, pois é gerado pelo banco                
+                ProductEntity productEntity = new ProductEntity();
+                if (orderItemDto.getProduct() != null) {
+                    productEntity.setProductId(orderItemDto.getProduct().getProductId());
                 }
-                ie.setProduct(pe);
-                ie.setQuantity(oi.getQuantity());
-                ie.setUnitPrice(oi.getUnitPrice());
-                entity.addItem(ie);
+                orderItemEntity.setProduct(productEntity);
+                orderItemEntity.setQuantity(orderItemDto.getQuantity());
+                orderItemEntity.setUnitPrice(orderItemDto.getUnitPrice());
+                orderItemEntity.setMetadata(orderItemDto.getProduct().getMetadata());
+                orderItemEntity.setOrder(orderEntity);
+                orderEntity.addItem(orderItemEntity);
             }
         }
 
-        return entity;
+        return orderEntity;
     }
 
     @Override
