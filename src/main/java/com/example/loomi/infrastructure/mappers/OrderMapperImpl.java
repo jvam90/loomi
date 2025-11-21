@@ -47,7 +47,8 @@ public class OrderMapperImpl implements IOrderMapper {
                 var productEntity = orderItemEntity.getProduct();
                 var product = productMapper.toDomainProduct(productEntity);
                 OrderItem orderItem = new OrderItem(product, orderItemEntity.getQuantity(),
-                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey());
+                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey(),
+                        orderItemEntity.getMetadata());
                 orderItem.setId(orderItemEntity.getId());
                 orderItem.setOrder(order);
                 items.add(orderItem);
@@ -70,11 +71,13 @@ public class OrderMapperImpl implements IOrderMapper {
                 ProductEntity productEntity = new ProductEntity();
                 if (orderItemDto.getProduct() != null) {
                     productEntity.setProductId(orderItemDto.getProduct().getProductId());
+                } else {
+                    productEntity.setProductId(orderItemDto.getProductId());
                 }
                 orderItemEntity.setProduct(productEntity);
                 orderItemEntity.setQuantity(orderItemDto.getQuantity());
                 orderItemEntity.setUnitPrice(orderItemDto.getUnitPrice());
-                orderItemEntity.setMetadata(orderItemDto.getProduct().getMetadata());
+                orderItemEntity.setMetadata(orderItemDto.getMetadata());
                 orderItemEntity.setOrder(orderEntity);
                 orderEntity.addItem(orderItemEntity);
             }
@@ -92,7 +95,8 @@ public class OrderMapperImpl implements IOrderMapper {
             for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
                 ProductDto pdto = productMapper.toDto(orderItemEntity.getProduct());
                 OrderItemDto orderItemdto = new OrderItemDto(dto, pdto, orderItemEntity.getQuantity(),
-                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey());
+                        orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey(),
+                        orderItemEntity.getMetadata());
                 itemDtos.add(orderItemdto);
             }
         }
