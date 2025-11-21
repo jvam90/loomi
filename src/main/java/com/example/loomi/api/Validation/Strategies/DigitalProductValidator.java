@@ -7,7 +7,6 @@ import com.example.loomi.api.Validation.ProductValidator;
 import com.example.loomi.domain.Entities.Product;
 import com.example.loomi.domain.Enums.ProductType;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
-import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
 
 @Component
 public class DigitalProductValidator implements ProductValidator {
