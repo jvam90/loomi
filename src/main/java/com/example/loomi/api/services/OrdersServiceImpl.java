@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.loomi.api.Validation.ProductValidatorFactory;
 import com.example.loomi.api.Validation.ProductValidationException;
@@ -27,6 +29,8 @@ public class OrdersServiceImpl implements OrdersService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final ProductValidatorFactory productValidatorFactory;
+
+    private static final Logger log = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
     public OrdersServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository,
             ProductRepository productRepository, ProductValidatorFactory productValidatorFactory) {
@@ -65,6 +69,7 @@ public class OrdersServiceImpl implements OrdersService {
     // Use optimistic locking with retries to avoid oversell under concurrency
     @Override
     public OrderEntity createOrder(OrderEntity orderEntity) {
+        log.info("createOrder called for customerId={}", orderEntity.getCustomerId());
         final int maxAttempts = 3;
         int attempts = 0;
         while (true) {
@@ -72,7 +77,11 @@ public class OrdersServiceImpl implements OrdersService {
                 return doCreateOrderTransactional(orderEntity);
             } catch (OptimisticLockingFailureException ex) {
                 attempts++;
+                log.warn("Optimistic lock detected when creating order for customer {} (attempt {})",
+                        orderEntity.getCustomerId(), attempts);
                 if (attempts >= maxAttempts) {
+                    log.error("Exceeded max retry attempts ({}). Failing order creation for customer {}", maxAttempts,
+                            orderEntity.getCustomerId());
                     throw new ProductValidationException(
                             "Could not reserve stock due to concurrent updates. Please try again.");
                 }
@@ -81,6 +90,7 @@ public class OrdersServiceImpl implements OrdersService {
                     Thread.sleep(50L * attempts);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
+                    log.error("Interrupted while retrying order creation", ie);
                     throw new ProductValidationException("Interrupted while retrying order creation", ie);
                 }
             }
@@ -104,6 +114,8 @@ public class OrdersServiceImpl implements OrdersService {
         getAmountCorporativeItemsInOrder(orderEntity);
 
         orderEntity.setTotal(new BigDecimal(0));
+        log.debug("Running validators for {} items",
+                orderEntity.getItems() == null ? 0 : orderEntity.getItems().size());
         // validate each item using the registered validators
         for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
 
@@ -112,6 +124,7 @@ public class OrdersServiceImpl implements OrdersService {
             var productEntity = productRepository.findById(requestedProductId);
 
             if (productEntity.isEmpty()) {
+                log.warn("Product with ID {} does not exist", requestedProductId);
                 throw new IllegalArgumentException(
                         "Product with ID " + requestedProductId + " does not exist.");
             }
@@ -123,6 +136,7 @@ public class OrdersServiceImpl implements OrdersService {
 
             orderItemEntity.setProduct(productEntity.get());
             productValidatorFactory.get(orderItemEntity.getProduct().getProductType()).validate(orderItemEntity);
+            log.debug("Validated item productId={} qty={}", requestedProductId, orderItemEntity.getQuantity());
 
             Integer productStock = 0;
 
@@ -132,12 +146,16 @@ public class OrdersServiceImpl implements OrdersService {
                     || isProductCorporateWithStock(orderItemEntity)) {
                 productStock = productEntity.get().getStockQuantity();
                 productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
+                log.debug("Product {} stock decremented: availableBefore={} requested={}", requestedProductId,
+                        productStock, orderRequestedAmount);
             }
 
             // para pré-venda a quantiadade está em preOrderSlots
             if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
                 productStock = productEntity.get().getPreOrderSlots();
                 productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
+                log.debug("Product {} pre-order slots decremented: availableBefore={} requested={}", requestedProductId,
+                        productStock, orderRequestedAmount);
             }
 
             // para digital a quantiadade está em licenses
@@ -146,6 +164,8 @@ public class OrdersServiceImpl implements OrdersService {
                 productEntity.get().setLicenses(productStock - orderRequestedAmount);
                 // salvar a chave de ativacao
                 orderItemEntity.setActivationKey(UUID.randomUUID().toString());
+                log.debug("Product {} licenses decremented: availableBefore={} requested={}", requestedProductId,
+                        productStock, orderRequestedAmount);
             }
 
             orderItemEntity.setOrder(orderEntity);
@@ -154,9 +174,13 @@ public class OrdersServiceImpl implements OrdersService {
             orderEntity.setTotal(orderEntity.getTotal().add(calculateTotalPrice(productEntity, orderRequestedAmount)));
 
             productRepository.save(productEntity.get());
+            log.info("Updated inventory for product {}", requestedProductId);
         }
         orderEntity.setOrderId(UUID.randomUUID().toString());
-        return orderRepository.save(orderEntity);
+        OrderEntity saved = orderRepository.save(orderEntity);
+        log.info("Order {} saved for customer {} with {} items", saved.getOrderId(), saved.getCustomerId(),
+                saved.getItems().size());
+        return saved;
     }
 
     // Um pedido corporativo não pode conter outros tipos de produtos
