@@ -1,7 +1,7 @@
 package com.example.loomi.domain.Entities;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.Map;
 
 public class OrderItem {
 
@@ -11,16 +11,19 @@ public class OrderItem {
     private Integer quantity;
     // para snapshot de preço
     private BigDecimal unitPrice;
-    private UUID activationKey;
+    private String activationKey;
+    private Map<String, Object> metadata;
 
     public OrderItem() {
     }
 
-    public OrderItem(Product product, Integer quantity, BigDecimal unitPrice, UUID activationKey) {
+    public OrderItem(Product product, Integer quantity, BigDecimal unitPrice, String activationKey,
+            Map<String, Object> metadata) {
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.activationKey = activationKey;
+        this.metadata = metadata;
     }
 
     public Long getId() {
@@ -63,12 +66,20 @@ public class OrderItem {
         this.unitPrice = unitPrice;
     }
 
-    public UUID getActivationKey() {
+    public String getActivationKey() {
         return activationKey;
     }
 
-    public void setActivationKey(UUID activationKey) {
+    public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
     }
 
 }

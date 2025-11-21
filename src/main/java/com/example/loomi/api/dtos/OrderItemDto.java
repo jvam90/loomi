@@ -1,26 +1,29 @@
 package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.Map;
 
 public class OrderItemDto {
     private OrderDto order;
+    private String productId;
     private ProductDto product;
     private Integer quantity;
     // para snapshot de preço
     private BigDecimal unitPrice;
-    private UUID activationKey;
+    private String activationKey;
+    private Map<String, Object> metadata;
 
     public OrderItemDto() {
     }
 
     public OrderItemDto(OrderDto order, ProductDto product, Integer quantity, BigDecimal unitPrice,
-            UUID activationKey) {
+            String activationKey, Map<String, Object> metadata) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.activationKey = activationKey;
+        this.metadata = metadata;
     }
 
     public OrderDto getOrder() {
@@ -55,12 +58,28 @@ public class OrderItemDto {
         this.unitPrice = unitPrice;
     }
 
-    public UUID getActivationKey() {
+    public String getActivationKey() {
         return activationKey;
     }
 
-    public void setActivationKey(UUID activationKey) {
+    public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
 }

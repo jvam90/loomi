@@ -1,12 +1,12 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
-import com.example.loomi.domain.Entities.Metadata;
 import com.example.loomi.domain.Enums.ProductType;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
@@ -45,7 +45,7 @@ public class ProductEntity {
     @Type(JsonBinaryType.class)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb", nullable = true)
-    private Metadata metadata;
+    private Map<String, Object> metadata;
 
     @Column(name = "licenses", nullable = true)
     private Integer licenses;
@@ -62,7 +62,7 @@ public class ProductEntity {
 
     public ProductEntity(String productId, String name, ProductType productType, BigDecimal price,
             Integer stockQuantity, boolean active,
-            Metadata metadata, Integer licenses, Integer preOrderSlots) {
+            Map<String, Object> metadata, Integer licenses, Integer preOrderSlots) {
         this.productId = productId;
         this.name = name;
         this.productType = productType;
@@ -122,11 +122,11 @@ public class ProductEntity {
         this.active = active;
     }
 
-    public Metadata getMetadata() {
+    public Map<String, Object> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Metadata metadata) {
+    public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 
