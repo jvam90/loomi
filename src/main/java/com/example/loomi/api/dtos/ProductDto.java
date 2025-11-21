@@ -1,6 +1,7 @@
 package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import com.example.loomi.domain.Entities.Metadata;
 import com.example.loomi.domain.Enums.ProductType;
@@ -12,7 +13,7 @@ public class ProductDto {
     private BigDecimal price;
     private Integer stockQuantity;
     private boolean active = true;
-    private Metadata metadata;
+    private Map<String, Object> metadata;
     private Integer licenses;
     private Integer preOrderSlots;
 
@@ -21,7 +22,7 @@ public class ProductDto {
 
     public ProductDto(String productId, String name, ProductType productType, BigDecimal price, Integer stockQuantity,
             boolean active,
-            Metadata metadata, Integer licenses, Integer preOrderSlots) {
+            Map<String, Object> metadata, Integer licenses, Integer preOrderSlots) {
         this.name = name;
         this.productType = productType;
         this.price = price;
@@ -80,11 +81,11 @@ public class ProductDto {
         this.active = active;
     }
 
-    public Metadata getMetadata() {
+    public Map<String, Object> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Metadata metadata) {
+    public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 
