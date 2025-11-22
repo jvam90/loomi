@@ -1,5 +1,6 @@
 package com.example.loomi.api.Validation.Strategies;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.loomi.api.Validation.ProductValidationException;
@@ -17,6 +18,9 @@ public class SubscriptionProductValidator implements ProductValidator {
 
     private final CustomerRepository customerRepository;
     private final SubscriptionRepository subscriptionRepository;
+
+    @Value("${customers.max.active.subscriptions}")
+    private int customersMaxActiveSubscriptions;
 
     public SubscriptionProductValidator(CustomerRepository customerRepository,
             SubscriptionRepository subscriptionRepository) {
@@ -38,7 +42,8 @@ public class SubscriptionProductValidator implements ProductValidator {
     public void validate(OrderItemEntity orderItemEntity) throws ProductValidationException {
         // Um cliente não pode ter 5 assinaturas ativas ao mesmo tempo
         if (subscriptionRepository.countByCustomerCustomerIdAndStatus(
-                orderItemEntity.getOrder().getCustomerId(), SubscriptionStatus.ACTIVE) >= 5) {
+                orderItemEntity.getOrder().getCustomerId(),
+                SubscriptionStatus.ACTIVE) >= customersMaxActiveSubscriptions) {
             throw new ProductValidationException("Customer ID" + orderItemEntity.getOrder().getCustomerId()
                     + " has reached the maximum number of active subscriptions.");
         }

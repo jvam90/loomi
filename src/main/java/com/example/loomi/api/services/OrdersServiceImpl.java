@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ public class OrdersServiceImpl implements OrdersService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final ProductValidatorFactory productValidatorFactory;
+
+    @Value("${orders.max.attempts}")
+    private int maxAttempts;
 
     private static final Logger log = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
@@ -66,11 +70,11 @@ public class OrdersServiceImpl implements OrdersService {
         return customerOrder;
     }
 
-    // Use optimistic locking with retries to avoid oversell under concurrency
+    // Método utiliza trava otimista para tentar criar o pedido e evitar
+    // concorrência
     @Override
     public OrderEntity createOrder(OrderEntity orderEntity) {
         log.info("createOrder called for customerId={}", orderEntity.getCustomerId());
-        final int maxAttempts = 3;
         int attempts = 0;
         while (true) {
             try {
@@ -85,7 +89,8 @@ public class OrdersServiceImpl implements OrdersService {
                     throw new ProductValidationException(
                             "Could not reserve stock due to concurrent updates. Please try again.");
                 }
-                // small backoff before retrying
+
+                // Aguarda um tempo antes de tentar novamente
                 try {
                     Thread.sleep(50L * attempts);
                 } catch (InterruptedException ie) {
