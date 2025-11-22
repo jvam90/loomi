@@ -41,7 +41,9 @@ public class OrderMapperImpl implements IOrderMapper {
     public Order toDomainOrder(OrderEntity entity) {
         List<OrderItem> items = new ArrayList<>();
         Order order = new Order(entity.getOrderId(), entity.getCustomerId(), items, entity.getStatus());
-
+        order.setCreatedAt(entity.getCreatedAt());
+        order.setUpdatedAt((entity.getUpdatedAt()));
+        order.setTotal(entity.getTotal());
         if (entity.getItems() != null) {
             for (OrderItemEntity orderItemEntity : entity.getItems()) {
                 var productEntity = orderItemEntity.getProduct();
@@ -89,19 +91,21 @@ public class OrderMapperImpl implements IOrderMapper {
     @Override
     public OrderDto toDto(OrderEntity orderEntity) {
         List<OrderItemDto> itemDtos = new ArrayList<>();
-        OrderDto dto = new OrderDto(orderEntity.getCustomerId(), itemDtos, orderEntity.getStatus());
-
+        OrderDto orderDto = new OrderDto(orderEntity.getCustomerId(), itemDtos, orderEntity.getStatus());
+        orderDto.setCreatedAt(orderEntity.getCreatedAt());
+        orderDto.setUpdatedAt((orderEntity.getUpdatedAt()));
+        orderDto.setTotal(orderEntity.getTotal());
         if (orderEntity.getItems() != null) {
             for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
                 ProductDto pdto = productMapper.toDto(orderItemEntity.getProduct());
-                OrderItemDto orderItemdto = new OrderItemDto(dto, pdto, orderItemEntity.getQuantity(),
+                OrderItemDto orderItemdto = new OrderItemDto(orderDto, pdto, orderItemEntity.getQuantity(),
                         orderItemEntity.getUnitPrice(), orderItemEntity.getActivationKey(),
                         orderItemEntity.getMetadata());
                 itemDtos.add(orderItemdto);
             }
         }
 
-        return dto;
+        return orderDto;
     }
 
 }
