@@ -1,7 +1,6 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 import com.example.loomi.domain.Enums.SubscriptionStatus;
