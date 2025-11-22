@@ -1,6 +1,7 @@
 package com.example.loomi.domain.Entities;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 public class OrderItem {
@@ -13,6 +14,8 @@ public class OrderItem {
     private BigDecimal unitPrice;
     private String activationKey;
     private Map<String, Object> metadata;
+    private String deliveryTime;
+    private OffsetDateTime firstBillingDate;
 
     public OrderItem() {
     }
@@ -80,6 +83,22 @@ public class OrderItem {
 
     public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
+    }
+
+    public String getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(String deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public OffsetDateTime getFirstBillingDate() {
+        return firstBillingDate;
+    }
+
+    public void setFirstBillingDate(OffsetDateTime firstBillingDate) {
+        this.firstBillingDate = firstBillingDate;
     }
 
 }
