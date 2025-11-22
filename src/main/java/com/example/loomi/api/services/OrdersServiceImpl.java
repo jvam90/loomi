@@ -15,12 +15,15 @@ import org.slf4j.LoggerFactory;
 import com.example.loomi.api.Validation.ProductValidatorFactory;
 import com.example.loomi.api.Validation.ProductValidationException;
 import com.example.loomi.domain.Enums.ProductType;
+import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
 import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
+import com.example.loomi.infrastructure.JPAEntities.SubscriptionEntity;
 import com.example.loomi.infrastructure.Repositories.CustomerRepository;
 import com.example.loomi.infrastructure.Repositories.OrderRepository;
 import com.example.loomi.infrastructure.Repositories.ProductRepository;
+import com.example.loomi.infrastructure.Repositories.SubscriptionRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -31,6 +34,7 @@ public class OrdersServiceImpl implements OrdersService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final ProductValidatorFactory productValidatorFactory;
+    private final SubscriptionRepository subscriptionRepository;
 
     @Value("${orders.max.attempts}")
     private int maxAttempts;
@@ -38,11 +42,13 @@ public class OrdersServiceImpl implements OrdersService {
     private static final Logger log = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
     public OrdersServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository,
-            ProductRepository productRepository, ProductValidatorFactory productValidatorFactory) {
+            ProductRepository productRepository, ProductValidatorFactory productValidatorFactory,
+            SubscriptionRepository subscriptionRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.productValidatorFactory = productValidatorFactory;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @Override
@@ -165,9 +171,7 @@ public class OrdersServiceImpl implements OrdersService {
             }
 
             // Se for um produto de subscrição, salvar no banco
-            if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
-
-            }
+            checkIfSubscriptionAndSave(orderEntity, productEntity);
 
             // Atualiza a referência do pedido em orderEntity
             orderItemEntity.setOrder(orderEntity);
@@ -187,6 +191,20 @@ public class OrdersServiceImpl implements OrdersService {
         log.info("Order {} saved for customer {} with {} items", saved.getOrderId(), saved.getCustomerId(),
                 saved.getItems().size());
         return saved;
+    }
+
+    private void checkIfSubscriptionAndSave(OrderEntity orderEntity, Optional<ProductEntity> productEntity) {
+        if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
+            SubscriptionEntity subscriptionEntity = new SubscriptionEntity();
+            subscriptionEntity.setProductId(productEntity.get().getProductId());
+            subscriptionEntity.setUnitPrice(productEntity.get().getPrice());
+            subscriptionEntity.setStartDate(OffsetDateTime.now());
+            // Mock (1 ano)
+            subscriptionEntity.setEndDate(OffsetDateTime.now().plusYears(1));
+            CustomerEntity customerEntity = customerRepository.findById(orderEntity.getCustomerId()).get();
+            subscriptionEntity.setCustomer(customerEntity);
+            subscriptionRepository.save(subscriptionEntity);
+        }
     }
 
     private void checkIfDigitalProductAndSendEmail(OrderEntity orderEntity, OrderItemEntity orderItemEntity,
