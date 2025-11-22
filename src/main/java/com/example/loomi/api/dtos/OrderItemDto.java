@@ -1,6 +1,7 @@
 package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 public class OrderItemDto {
@@ -12,6 +13,8 @@ public class OrderItemDto {
     private BigDecimal unitPrice;
     private String activationKey;
     private Map<String, Object> metadata;
+    private String deliveryTime;
+    private OffsetDateTime firstBillingDate;
 
     public OrderItemDto() {
     }
@@ -80,6 +83,22 @@ public class OrderItemDto {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(String deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public OffsetDateTime getFirstBillingDate() {
+        return firstBillingDate;
+    }
+
+    public void setFirstBillingDate(OffsetDateTime firstBillingDate) {
+        this.firstBillingDate = firstBillingDate;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 import org.hibernate.annotations.JdbcTypeCode;
@@ -46,6 +47,12 @@ public class OrderItemEntity {
 
     @Column(name = "activation_key", nullable = true)
     private String activationKey;
+
+    @Column(name = "devivery_time", nullable = true)
+    private String deliveryTime;
+
+    @Column(name = "first_billing_date", nullable = true)
+    private OffsetDateTime firstBillingDate;
 
     public OrderItemEntity() {
     }
@@ -110,6 +117,22 @@ public class OrderItemEntity {
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public String getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(String deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public OffsetDateTime getFirstBillingDate() {
+        return firstBillingDate;
+    }
+
+    public void setFirstBillingDate(OffsetDateTime firstBillingDate) {
+        this.firstBillingDate = firstBillingDate;
     }
 
 }

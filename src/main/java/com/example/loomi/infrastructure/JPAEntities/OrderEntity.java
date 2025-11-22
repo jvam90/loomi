@@ -1,6 +1,7 @@
 package com.example.loomi.infrastructure.JPAEntities;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,12 @@ public class OrderEntity {
 
     @Column(name = "total", nullable = false)
     private BigDecimal total;
+
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
 
     public OrderEntity() {
     }
@@ -92,6 +99,22 @@ public class OrderEntity {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }

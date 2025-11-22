@@ -1,11 +1,13 @@
 package com.example.loomi.api.services;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +15,15 @@ import org.slf4j.LoggerFactory;
 import com.example.loomi.api.Validation.ProductValidatorFactory;
 import com.example.loomi.api.Validation.ProductValidationException;
 import com.example.loomi.domain.Enums.ProductType;
+import com.example.loomi.infrastructure.JPAEntities.CustomerEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderEntity;
 import com.example.loomi.infrastructure.JPAEntities.OrderItemEntity;
 import com.example.loomi.infrastructure.JPAEntities.ProductEntity;
+import com.example.loomi.infrastructure.JPAEntities.SubscriptionEntity;
 import com.example.loomi.infrastructure.Repositories.CustomerRepository;
 import com.example.loomi.infrastructure.Repositories.OrderRepository;
 import com.example.loomi.infrastructure.Repositories.ProductRepository;
+import com.example.loomi.infrastructure.Repositories.SubscriptionRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -29,15 +34,21 @@ public class OrdersServiceImpl implements OrdersService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final ProductValidatorFactory productValidatorFactory;
+    private final SubscriptionRepository subscriptionRepository;
+
+    @Value("${orders.max.attempts}")
+    private int maxAttempts;
 
     private static final Logger log = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
     public OrdersServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository,
-            ProductRepository productRepository, ProductValidatorFactory productValidatorFactory) {
+            ProductRepository productRepository, ProductValidatorFactory productValidatorFactory,
+            SubscriptionRepository subscriptionRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.productValidatorFactory = productValidatorFactory;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @Override
@@ -66,11 +77,12 @@ public class OrdersServiceImpl implements OrdersService {
         return customerOrder;
     }
 
-    // Use optimistic locking with retries to avoid oversell under concurrency
+    // Método utiliza trava otimista para tentar criar o pedido e evitar
+    // concorrência
     @Override
+    @Transactional
     public OrderEntity createOrder(OrderEntity orderEntity) {
         log.info("createOrder called for customerId={}", orderEntity.getCustomerId());
-        final int maxAttempts = 3;
         int attempts = 0;
         while (true) {
             try {
@@ -85,7 +97,8 @@ public class OrdersServiceImpl implements OrdersService {
                     throw new ProductValidationException(
                             "Could not reserve stock due to concurrent updates. Please try again.");
                 }
-                // small backoff before retrying
+
+                // Aguarda um tempo antes de tentar novamente
                 try {
                     Thread.sleep(50L * attempts);
                 } catch (InterruptedException ie) {
@@ -97,7 +110,6 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
-    @Transactional
     private OrderEntity doCreateOrderTransactional(OrderEntity orderEntity) {
         if (!customerRepository.existsById(orderEntity.getCustomerId())) {
             throw new IllegalArgumentException("Customer with ID " + orderEntity.getCustomerId() + " does not exist.");
@@ -111,7 +123,8 @@ public class OrdersServiceImpl implements OrdersService {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
 
-        getAmountCorporativeItemsInOrder(orderEntity);
+        // Verifica se o pedido é totalmente corporativo
+        checkIfOrderIsFullyCorporate(orderEntity);
 
         orderEntity.setTotal(new BigDecimal(0));
         log.debug("Running validators for {} items",
@@ -138,37 +151,31 @@ public class OrdersServiceImpl implements OrdersService {
             productValidatorFactory.get(orderItemEntity.getProduct().getProductType()).validate(orderItemEntity);
             log.debug("Validated item productId={} qty={}", requestedProductId, orderItemEntity.getQuantity());
 
-            Integer productStock = 0;
+            // Método para atualizar o estoque no banco de acordo com o tipo do produto,
+            // pois pode vir de diferentes colunas.
+            updateProductStockAccordingToProductType(orderItemEntity, requestedProductId, orderRequestedAmount,
+                    productEntity);
 
-            // para produtos físicos e quando for corporativo com quantidade especificada,
-            // a quantidade está em stockQuantity
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PHYSICAL)
-                    || isProductCorporateWithStock(orderItemEntity)) {
-                productStock = productEntity.get().getStockQuantity();
-                productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
-                log.debug("Product {} stock decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
+            // Se o produto for digital, mock de envio de email com a chave de ativação
+            checkIfDigitalProductAndSendEmail(orderEntity, orderItemEntity, productEntity);
+
+            // se produto físico, mockar a data de entrega:
+            if (productEntity.get().getProductType().equals(ProductType.PHYSICAL)) {
+                orderItemEntity.setDeliveryTime("10 days");
             }
 
-            // para pré-venda a quantiadade está em preOrderSlots
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
-                productStock = productEntity.get().getPreOrderSlots();
-                productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
-                log.debug("Product {} pre-order slots decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
+            // Se produto for assinatura, mockar data de primeira cobrança para daqui a um
+            // mês
+            if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
+                orderItemEntity.setFirstBillingDate(OffsetDateTime.now().plusDays(30));
             }
 
-            // para digital a quantiadade está em licenses
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
-                productStock = productEntity.get().getLicenses();
-                productEntity.get().setLicenses(productStock - orderRequestedAmount);
-                // salvar a chave de ativacao
-                orderItemEntity.setActivationKey(UUID.randomUUID().toString());
-                log.debug("Product {} licenses decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
-            }
+            // Se for um produto de subscrição, salvar no banco
+            checkIfSubscriptionAndSave(orderEntity, productEntity);
 
+            // Atualiza a referência do pedido em orderEntity
             orderItemEntity.setOrder(orderEntity);
+            // Guarda o valor daquele instante em unitPrice (snapshot)
             orderItemEntity.setUnitPrice(productEntity.get().getPrice());
 
             orderEntity.setTotal(orderEntity.getTotal().add(calculateTotalPrice(productEntity, orderRequestedAmount)));
@@ -176,15 +183,77 @@ public class OrdersServiceImpl implements OrdersService {
             productRepository.save(productEntity.get());
             log.info("Updated inventory for product {}", requestedProductId);
         }
+
         orderEntity.setOrderId(UUID.randomUUID().toString());
+        orderEntity.setCreatedAt(OffsetDateTime.now());
+        orderEntity.setUpdatedAt(OffsetDateTime.now());
         OrderEntity saved = orderRepository.save(orderEntity);
         log.info("Order {} saved for customer {} with {} items", saved.getOrderId(), saved.getCustomerId(),
                 saved.getItems().size());
         return saved;
     }
 
+    private void checkIfSubscriptionAndSave(OrderEntity orderEntity, Optional<ProductEntity> productEntity) {
+        if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
+            SubscriptionEntity subscriptionEntity = new SubscriptionEntity();
+            subscriptionEntity.setProductId(productEntity.get().getProductId());
+            subscriptionEntity.setUnitPrice(productEntity.get().getPrice());
+            subscriptionEntity.setStartDate(OffsetDateTime.now());
+            // Mock (1 ano)
+            subscriptionEntity.setEndDate(OffsetDateTime.now().plusYears(1));
+            CustomerEntity customerEntity = customerRepository.findById(orderEntity.getCustomerId()).get();
+            subscriptionEntity.setCustomer(customerEntity);
+            subscriptionRepository.save(subscriptionEntity);
+        }
+    }
+
+    private void checkIfDigitalProductAndSendEmail(OrderEntity orderEntity, OrderItemEntity orderItemEntity,
+            Optional<ProductEntity> productEntity) {
+        if (productEntity.get().getProductType().equals(ProductType.DIGITAL)) {
+            log.info(
+                    "Email sent for customer {} with the activation key for Product {}",
+                    orderEntity.getCustomerId(),
+                    orderItemEntity.getProduct().getProductId());
+        }
+    }
+
+    private void updateProductStockAccordingToProductType(OrderItemEntity orderItemEntity, String requestedProductId,
+            int orderRequestedAmount,
+            Optional<ProductEntity> productEntity) {
+
+        Integer productStock;
+
+        // para produtos físicos e quando for corporativo com quantidade especificada,
+        // a quantidade está em stockQuantity
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.PHYSICAL)
+                || isProductCorporateWithStock(orderItemEntity)) {
+            productStock = productEntity.get().getStockQuantity();
+            productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
+            log.debug("Product {} stock decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
+
+        // para pré-venda a quantiadade está em preOrderSlots
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
+            productStock = productEntity.get().getPreOrderSlots();
+            productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
+            log.debug("Product {} pre-order slots decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
+
+        // para digital a quantiadade está em licenses
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
+            productStock = productEntity.get().getLicenses();
+            productEntity.get().setLicenses(productStock - orderRequestedAmount);
+            // salvar a chave de ativacao
+            orderItemEntity.setActivationKey(UUID.randomUUID().toString());
+            log.debug("Product {} licenses decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
+    }
+
     // Um pedido corporativo não pode conter outros tipos de produtos
-    private void getAmountCorporativeItemsInOrder(OrderEntity orderEntity) {
+    private void checkIfOrderIsFullyCorporate(OrderEntity orderEntity) {
         int amountCorporativeItemsInOrder = 0;
         for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
             var productEntity = productRepository.findById(orderItemEntity.getProduct().getProductId());
@@ -200,6 +269,9 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
+    // Calcula o valor total do pedido. Se um pedido for corporativo e a quantia
+    // pedia for maior ou igual a 100,
+    // recebe um desconto de 15%
     private BigDecimal calculateTotalPrice(Optional<ProductEntity> productEntity, Integer orderRequestedAmount) {
         if (productEntity.get().getProductType().equals(ProductType.CORPORATE)
                 && orderRequestedAmount >= 100) {
