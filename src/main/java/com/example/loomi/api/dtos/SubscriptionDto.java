@@ -1,22 +1,22 @@
 package com.example.loomi.api.dtos;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 import com.example.loomi.domain.Enums.SubscriptionStatus;
 
 public class SubscriptionDto {
     private CustomerDto customer;
     private String productId;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private OffsetDateTime startDate;
+    private OffsetDateTime endDate;
     private SubscriptionStatus status = SubscriptionStatus.ACTIVE;
     private BigDecimal unitPrice;
 
     public SubscriptionDto() {
     }
 
-    public SubscriptionDto(CustomerDto customer, String productId, LocalDate startDate, LocalDate endDate,
+    public SubscriptionDto(CustomerDto customer, String productId, OffsetDateTime startDate, OffsetDateTime endDate,
             SubscriptionStatus status, BigDecimal unitPrice) {
         this.customer = customer;
         this.productId = productId;
@@ -42,19 +42,19 @@ public class SubscriptionDto {
         this.productId = productId;
     }
 
-    public LocalDate getStartDate() {
+    public OffsetDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public OffsetDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(OffsetDateTime endDate) {
         this.endDate = endDate;
     }
 

@@ -1,0 +1,127 @@
+2025-11-22 16:09:20.063 [main] INFO  com.example.loomi.LoomiApplication [] [] - Starting LoomiApplication using Java 21.0.9 with PID 9921 (/Users/jvam90/Documents/projects/loomi/target/classes started by jvam90 in /Users/jvam90/Documents/projects/loomi)
+2025-11-22 16:09:20.064 [main] INFO  com.example.loomi.LoomiApplication [] [] - No active profile set, falling back to 1 default profile: "default"
+2025-11-22 16:09:20.399 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-22 16:09:20.437 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] [] - Finished Spring Data repository scanning in 32 ms. Found 4 JPA repository interfaces.
+2025-11-22 16:09:20.662 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [] [] - Tomcat initialized with port 8080 (http)
+2025-11-22 16:09:20.668 [main] INFO  o.a.coyote.http11.Http11NioProtocol [] [] - Initializing ProtocolHandler ["http-nio-8080"]
+2025-11-22 16:09:20.669 [main] INFO  o.a.catalina.core.StandardService [] [] - Starting service [Tomcat]
+2025-11-22 16:09:20.670 [main] INFO  o.a.catalina.core.StandardEngine [] [] - Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-11-22 16:09:20.703 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [] [] - Initializing Spring embedded WebApplicationContext
+2025-11-22 16:09:20.704 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext [] [] - Root WebApplicationContext: initialization completed in 617 ms
+2025-11-22 16:09:20.869 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Starting...
+2025-11-22 16:09:20.992 [main] INFO  com.zaxxer.hikari.pool.HikariPool [] [] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@68d6f48e
+2025-11-22 16:09:20.993 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Start completed.
+2025-11-22 16:09:21.013 [main] WARN  org.hibernate.orm.deprecation [] [] - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-22 16:09:21.188 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo [] [] - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-22 16:09:21.714 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] [] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-22 16:09:21.840 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory [] [] - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-22 16:09:22.251 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [] [] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-22 16:09:22.421 [main] INFO  o.a.coyote.http11.Http11NioProtocol [] [] - Starting ProtocolHandler ["http-nio-8080"]
+2025-11-22 16:09:22.424 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [] [] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-11-22 16:09:22.425 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] [] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-22 16:09:22.426 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Shutdown initiated...
+2025-11-22 16:09:22.427 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Shutdown completed.
+2025-11-22 16:09:22.437 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger [] [] - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-11-22 16:09:22.446 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter [] [] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2025-11-22 16:11:39.292 [main] INFO  com.example.loomi.LoomiApplication [] [] - Starting LoomiApplication using Java 21.0.9 with PID 10564 (/Users/jvam90/Documents/projects/loomi/target/classes started by jvam90 in /Users/jvam90/Documents/projects/loomi)
+2025-11-22 16:11:39.293 [main] INFO  com.example.loomi.LoomiApplication [] [] - No active profile set, falling back to 1 default profile: "default"
+2025-11-22 16:11:39.618 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] [] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-22 16:11:39.655 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [] [] - Finished Spring Data repository scanning in 31 ms. Found 4 JPA repository interfaces.
+2025-11-22 16:11:39.865 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [] [] - Tomcat initialized with port 8080 (http)
+2025-11-22 16:11:39.872 [main] INFO  o.a.coyote.http11.Http11NioProtocol [] [] - Initializing ProtocolHandler ["http-nio-8080"]
+2025-11-22 16:11:39.873 [main] INFO  o.a.catalina.core.StandardService [] [] - Starting service [Tomcat]
+2025-11-22 16:11:39.873 [main] INFO  o.a.catalina.core.StandardEngine [] [] - Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-11-22 16:11:39.900 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [] [] - Initializing Spring embedded WebApplicationContext
+2025-11-22 16:11:39.900 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext [] [] - Root WebApplicationContext: initialization completed in 584 ms
+2025-11-22 16:11:40.067 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Starting...
+2025-11-22 16:11:40.185 [main] INFO  com.zaxxer.hikari.pool.HikariPool [] [] - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6987a133
+2025-11-22 16:11:40.186 [main] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Start completed.
+2025-11-22 16:11:40.210 [main] WARN  org.hibernate.orm.deprecation [] [] - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-22 16:11:40.308 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo [] [] - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-22 16:11:40.834 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] [] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-22 16:11:40.957 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory [] [] - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-22 16:11:41.365 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [] [] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-22 16:11:41.524 [main] INFO  o.a.coyote.http11.Http11NioProtocol [] [] - Starting ProtocolHandler ["http-nio-8080"]
+2025-11-22 16:11:41.532 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [] [] - Tomcat started on port 8080 (http) with context path '/'
+2025-11-22 16:11:41.537 [main] INFO  com.example.loomi.LoomiApplication [] [] - Started LoomiApplication in 2.521 seconds (process running for 2.747)
+2025-11-22 16:11:46.472 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [] [] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-22 16:11:46.472 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [] [] - Initializing Servlet 'dispatcherServlet'
+2025-11-22 16:11:46.473 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [] [] - Completed initialization in 0 ms
+2025-11-22 16:11:46.535 [http-nio-8080-exec-1] INFO  c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:11:46.635 [http-nio-8080-exec-1] DEBUG c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Running validators for 1 items
+2025-11-22 16:11:46.636 [http-nio-8080-exec-1] DEBUG c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Validated item productId=BOOK-CC-001 qty=1
+2025-11-22 16:11:46.636 [http-nio-8080-exec-1] DEBUG c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Product BOOK-CC-001 stock decremented: availableBefore=147 requested=1
+2025-11-22 16:11:46.662 [http-nio-8080-exec-1] INFO  c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Updated inventory for product BOOK-CC-001
+2025-11-22 16:12:05.248 [http-nio-8080-exec-1] INFO  c.e.l.api.services.OrdersServiceImpl [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Order 6610314f-44a6-461c-b6bd-c98811e74d1e saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 1 items
+2025-11-22 16:12:05.266 [http-nio-8080-exec-1] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:12:05.267 [http-nio-8080-exec-1] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [2f069098-6bb7-4ddb-a407-8c4aaec93697] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:13:35.867 [http-nio-8080-exec-2] INFO  c.e.l.api.services.OrdersServiceImpl [19a65a72-b187-48ae-b423-798aca3e7c72] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:13:35.883 [http-nio-8080-exec-2] DEBUG c.e.l.api.services.OrdersServiceImpl [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Running validators for 1 items
+2025-11-22 16:13:35.909 [http-nio-8080-exec-2] DEBUG c.e.l.api.services.OrdersServiceImpl [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Validated item productId=SUB-PREMIUM-001 qty=1
+2025-11-22 16:13:35.909 [http-nio-8080-exec-2] INFO  c.e.l.api.services.OrdersServiceImpl [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Updated inventory for product SUB-PREMIUM-001
+2025-11-22 16:13:38.465 [http-nio-8080-exec-2] INFO  c.e.l.api.services.OrdersServiceImpl [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Order c9de7346-87dc-4111-ae2b-f40d3ef7a5a2 saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 1 items
+2025-11-22 16:13:38.480 [http-nio-8080-exec-2] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:13:38.480 [http-nio-8080-exec-2] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [19a65a72-b187-48ae-b423-798aca3e7c72] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:15:09.840 [http-nio-8080-exec-3] INFO  c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:15:09.852 [http-nio-8080-exec-3] DEBUG c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Running validators for 1 items
+2025-11-22 16:15:09.862 [http-nio-8080-exec-3] DEBUG c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Validated item productId=EBOOK-DDD-001 qty=1
+2025-11-22 16:15:09.862 [http-nio-8080-exec-3] DEBUG c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Product EBOOK-DDD-001 licenses decremented: availableBefore=500 requested=1
+2025-11-22 16:15:09.862 [http-nio-8080-exec-3] INFO  c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Email sent for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with the activation key for Product EBOOK-DDD-001
+2025-11-22 16:15:09.866 [http-nio-8080-exec-3] INFO  c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Updated inventory for product EBOOK-DDD-001
+2025-11-22 16:15:13.402 [http-nio-8080-exec-3] INFO  c.e.l.api.services.OrdersServiceImpl [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Order 85e4e7d5-ad7b-4dcc-bc92-bb37d3dae14f saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 1 items
+2025-11-22 16:15:13.420 [http-nio-8080-exec-3] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:15:13.420 [http-nio-8080-exec-3] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [5ef5fdf4-1658-4e95-a3d7-0dd85937c3ec] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:15:46.181 [http-nio-8080-exec-4] INFO  c.e.l.api.services.OrdersServiceImpl [2f6622ee-83b3-419e-b663-e9aa260b5f3c] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:15:58.801 [http-nio-8080-exec-5] INFO  c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:15:58.813 [http-nio-8080-exec-5] DEBUG c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Running validators for 1 items
+2025-11-22 16:15:58.815 [http-nio-8080-exec-5] DEBUG c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Validated item productId=PRE-PS6-001 qty=1
+2025-11-22 16:15:58.815 [http-nio-8080-exec-5] DEBUG c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Product PRE-PS6-001 pre-order slots decremented: availableBefore=1500 requested=1
+2025-11-22 16:15:58.822 [http-nio-8080-exec-5] INFO  c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Updated inventory for product PRE-PS6-001
+2025-11-22 16:16:02.244 [http-nio-8080-exec-5] INFO  c.e.l.api.services.OrdersServiceImpl [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Order 76f3553d-9f71-4573-b8b7-980b168d64a6 saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 1 items
+2025-11-22 16:16:02.259 [http-nio-8080-exec-5] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:16:02.259 [http-nio-8080-exec-5] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [eb428a6c-fd71-416b-89f3-ebfdaaad413e] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:16:37.662 [http-nio-8080-exec-6] INFO  c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:16:37.674 [http-nio-8080-exec-6] DEBUG c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Running validators for 1 items
+2025-11-22 16:16:37.675 [http-nio-8080-exec-6] DEBUG c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Validated item productId=CORP-CHAIR-ERG-001 qty=150
+2025-11-22 16:16:37.675 [http-nio-8080-exec-6] DEBUG c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Product CORP-CHAIR-ERG-001 stock decremented: availableBefore=500 requested=150
+2025-11-22 16:16:37.679 [http-nio-8080-exec-6] INFO  c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Updated inventory for product CORP-CHAIR-ERG-001
+2025-11-22 16:16:37.687 [http-nio-8080-exec-6] INFO  c.e.l.api.services.OrdersServiceImpl [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Order 3e32873e-fe6c-459b-aa86-bb314469eed5 saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 1 items
+2025-11-22 16:16:37.701 [http-nio-8080-exec-6] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:16:37.701 [http-nio-8080-exec-6] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [f949b4be-9705-410c-91a3-ce2271c4f385] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:17:41.963 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - createOrder called for customerId=bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12
+2025-11-22 16:17:41.976 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Running validators for 4 items
+2025-11-22 16:17:41.977 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Validated item productId=LAPTOP-MBP-M3-001 qty=1
+2025-11-22 16:17:41.977 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Product LAPTOP-MBP-M3-001 stock decremented: availableBefore=25 requested=1
+2025-11-22 16:17:41.981 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Updated inventory for product LAPTOP-MBP-M3-001
+2025-11-22 16:17:41.987 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Validated item productId=SUB-ADOBE-CC-001 qty=1
+2025-11-22 16:17:41.988 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Updated inventory for product SUB-ADOBE-CC-001
+2025-11-22 16:17:42.001 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Validated item productId=EBOOK-SWIFT-001 qty=1
+2025-11-22 16:17:42.002 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Product EBOOK-SWIFT-001 licenses decremented: availableBefore=800 requested=1
+2025-11-22 16:17:42.002 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Email sent for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with the activation key for Product EBOOK-SWIFT-001
+2025-11-22 16:17:42.005 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Updated inventory for product EBOOK-SWIFT-001
+2025-11-22 16:17:42.006 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Validated item productId=PRE-IPHONE16-001 qty=1
+2025-11-22 16:17:42.006 [http-nio-8080-exec-7] DEBUG c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Product PRE-IPHONE16-001 pre-order slots decremented: availableBefore=2000 requested=1
+2025-11-22 16:17:42.009 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Updated inventory for product PRE-IPHONE16-001
+2025-11-22 16:17:42.024 [http-nio-8080-exec-7] INFO  c.e.l.api.services.OrdersServiceImpl [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Order 57627df8-ffef-48f4-a232-222f0ed81205 saved for customer bd9c3c09-51a5-4ad5-9c5b-0dd36e088c12 with 4 items
+2025-11-22 16:17:42.035 [http-nio-8080-exec-7] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-11-22 16:17:42.035 [http-nio-8080-exec-7] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver [cd68b2c7-708a-4c00-be04-afa499676eee] [] - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+2025-11-22 16:18:49.222 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown [] [] - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-22 16:18:49.231 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown [] [] - Graceful shutdown complete
+2025-11-22 16:18:49.235 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean [] [] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-22 16:18:49.237 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Shutdown initiated...
+2025-11-22 16:18:49.239 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource [] [] - HikariPool-1 - Shutdown completed.

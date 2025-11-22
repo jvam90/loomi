@@ -1,6 +1,7 @@
 package com.example.loomi.api.services;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -73,6 +74,7 @@ public class OrdersServiceImpl implements OrdersService {
     // Método utiliza trava otimista para tentar criar o pedido e evitar
     // concorrência
     @Override
+    @Transactional
     public OrderEntity createOrder(OrderEntity orderEntity) {
         log.info("createOrder called for customerId={}", orderEntity.getCustomerId());
         int attempts = 0;
@@ -102,7 +104,6 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
-    @Transactional
     private OrderEntity doCreateOrderTransactional(OrderEntity orderEntity) {
         if (!customerRepository.existsById(orderEntity.getCustomerId())) {
             throw new IllegalArgumentException("Customer with ID " + orderEntity.getCustomerId() + " does not exist.");
@@ -152,6 +153,22 @@ public class OrdersServiceImpl implements OrdersService {
             // Se o produto for digital, mock de envio de email com a chave de ativação
             checkIfDigitalProductAndSendEmail(orderEntity, orderItemEntity, productEntity);
 
+            // se produto físico, mockar a data de entrega:
+            if (productEntity.get().getProductType().equals(ProductType.PHYSICAL)) {
+                orderItemEntity.setDeliveryTime("10 days");
+            }
+
+            // Se produto for assinatura, mockar data de primeira cobrança para daqui a um
+            // mês
+            if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
+                orderItemEntity.setFirstBillingDate(OffsetDateTime.now().plusDays(30));
+            }
+
+            // Se for um produto de subscrição, salvar no banco
+            if (productEntity.get().getProductType().equals(ProductType.SUBSCRIPTION)) {
+
+            }
+
             // Atualiza a referência do pedido em orderEntity
             orderItemEntity.setOrder(orderEntity);
             // Guarda o valor daquele instante em unitPrice (snapshot)
@@ -164,6 +181,8 @@ public class OrdersServiceImpl implements OrdersService {
         }
 
         orderEntity.setOrderId(UUID.randomUUID().toString());
+        orderEntity.setCreatedAt(OffsetDateTime.now());
+        orderEntity.setUpdatedAt(OffsetDateTime.now());
         OrderEntity saved = orderRepository.save(orderEntity);
         log.info("Order {} saved for customer {} with {} items", saved.getOrderId(), saved.getCustomerId(),
                 saved.getItems().size());

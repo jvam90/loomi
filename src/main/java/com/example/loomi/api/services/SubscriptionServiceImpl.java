@@ -1,7 +1,7 @@
 package com.example.loomi.api.services;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +34,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         long active = subscriptionRepository.countByCustomerCustomerIdAndStatus(customerId, SubscriptionStatus.ACTIVE);
         if (active >= MAX_ACTIVE) {
-            throw new IllegalStateException("Customer " + customerId + " already has " + MAX_ACTIVE + " active subscriptions");
+            throw new IllegalStateException(
+                    "Customer " + customerId + " already has " + MAX_ACTIVE + " active subscriptions");
         }
 
         SubscriptionEntity s = new SubscriptionEntity();
         s.setCustomer(customer);
         s.setProductId(productId);
-        s.setStartDate(LocalDate.now());
+        s.setStartDate(OffsetDateTime.now());
         s.setStatus(SubscriptionStatus.ACTIVE);
         s.setUnitPrice(unitPrice);
 
