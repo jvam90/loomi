@@ -111,7 +111,8 @@ public class OrdersServiceImpl implements OrdersService {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
 
-        getAmountCorporativeItemsInOrder(orderEntity);
+        // Verifica se o pedido é totalmente corporativo
+        checkIfOrderIsFullyCorporate(orderEntity);
 
         orderEntity.setTotal(new BigDecimal(0));
         log.debug("Running validators for {} items",
@@ -210,7 +211,7 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     // Um pedido corporativo não pode conter outros tipos de produtos
-    private void getAmountCorporativeItemsInOrder(OrderEntity orderEntity) {
+    private void checkIfOrderIsFullyCorporate(OrderEntity orderEntity) {
         int amountCorporativeItemsInOrder = 0;
         for (OrderItemEntity orderItemEntity : orderEntity.getItems()) {
             var productEntity = productRepository.findById(orderItemEntity.getProduct().getProductId());
