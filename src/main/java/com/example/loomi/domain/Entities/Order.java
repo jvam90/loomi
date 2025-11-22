@@ -1,5 +1,7 @@
 package com.example.loomi.domain.Entities;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.example.loomi.domain.Enums.OrderStatus;
@@ -10,6 +12,9 @@ public class Order {
     private String customerId;
     private List<OrderItem> items;
     private OrderStatus status;
+    private BigDecimal total;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 
     public Order(String orderId, String customerId, List<OrderItem> items, OrderStatus status) {
         this.orderId = orderId;
@@ -44,10 +49,33 @@ public class Order {
 
     public OrderStatus getStatus() {
         return status;
-    }    
+    }
 
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
 }
