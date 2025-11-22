@@ -138,37 +138,17 @@ public class OrdersServiceImpl implements OrdersService {
             productValidatorFactory.get(orderItemEntity.getProduct().getProductType()).validate(orderItemEntity);
             log.debug("Validated item productId={} qty={}", requestedProductId, orderItemEntity.getQuantity());
 
-            Integer productStock = 0;
+            // Método para atualizar o estoque no banco de acordo com o tipo do produto,
+            // pois pode vir de diferentes colunas.
+            updateProductStockAccordingToProductType(orderItemEntity, requestedProductId, orderRequestedAmount,
+                    productEntity);
 
-            // para produtos físicos e quando for corporativo com quantidade especificada,
-            // a quantidade está em stockQuantity
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PHYSICAL)
-                    || isProductCorporateWithStock(orderItemEntity)) {
-                productStock = productEntity.get().getStockQuantity();
-                productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
-                log.debug("Product {} stock decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
-            }
+            // Se o produto for digital, mock de envio de email com a chave de ativação
+            checkIfDigitalProductAndSendEmail(orderEntity, orderItemEntity, productEntity);
 
-            // para pré-venda a quantiadade está em preOrderSlots
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
-                productStock = productEntity.get().getPreOrderSlots();
-                productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
-                log.debug("Product {} pre-order slots decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
-            }
-
-            // para digital a quantiadade está em licenses
-            if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
-                productStock = productEntity.get().getLicenses();
-                productEntity.get().setLicenses(productStock - orderRequestedAmount);
-                // salvar a chave de ativacao
-                orderItemEntity.setActivationKey(UUID.randomUUID().toString());
-                log.debug("Product {} licenses decremented: availableBefore={} requested={}", requestedProductId,
-                        productStock, orderRequestedAmount);
-            }
-
+            // Atualiza a referência do pedido em orderEntity
             orderItemEntity.setOrder(orderEntity);
+            // Guarda o valor daquele instante em unitPrice (snapshot)
             orderItemEntity.setUnitPrice(productEntity.get().getPrice());
 
             orderEntity.setTotal(orderEntity.getTotal().add(calculateTotalPrice(productEntity, orderRequestedAmount)));
@@ -176,11 +156,57 @@ public class OrdersServiceImpl implements OrdersService {
             productRepository.save(productEntity.get());
             log.info("Updated inventory for product {}", requestedProductId);
         }
+
         orderEntity.setOrderId(UUID.randomUUID().toString());
         OrderEntity saved = orderRepository.save(orderEntity);
         log.info("Order {} saved for customer {} with {} items", saved.getOrderId(), saved.getCustomerId(),
                 saved.getItems().size());
         return saved;
+    }
+
+    private void checkIfDigitalProductAndSendEmail(OrderEntity orderEntity, OrderItemEntity orderItemEntity,
+            Optional<ProductEntity> productEntity) {
+        if (productEntity.get().getProductType().equals(ProductType.DIGITAL)) {
+            log.info(
+                    "Email sent for customer {} with the activation key for Product {}",
+                    orderEntity.getCustomerId(),
+                    orderItemEntity.getProduct().getProductId());
+        }
+    }
+
+    private void updateProductStockAccordingToProductType(OrderItemEntity orderItemEntity, String requestedProductId,
+            int orderRequestedAmount,
+            Optional<ProductEntity> productEntity) {
+
+        Integer productStock;
+
+        // para produtos físicos e quando for corporativo com quantidade especificada,
+        // a quantidade está em stockQuantity
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.PHYSICAL)
+                || isProductCorporateWithStock(orderItemEntity)) {
+            productStock = productEntity.get().getStockQuantity();
+            productEntity.get().setStockQuantity(productStock - orderRequestedAmount);
+            log.debug("Product {} stock decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
+
+        // para pré-venda a quantiadade está em preOrderSlots
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.PRE_ORDER)) {
+            productStock = productEntity.get().getPreOrderSlots();
+            productEntity.get().setPreOrderSlots(productStock - orderRequestedAmount);
+            log.debug("Product {} pre-order slots decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
+
+        // para digital a quantiadade está em licenses
+        if (orderItemEntity.getProduct().getProductType().equals(ProductType.DIGITAL)) {
+            productStock = productEntity.get().getLicenses();
+            productEntity.get().setLicenses(productStock - orderRequestedAmount);
+            // salvar a chave de ativacao
+            orderItemEntity.setActivationKey(UUID.randomUUID().toString());
+            log.debug("Product {} licenses decremented: availableBefore={} requested={}", requestedProductId,
+                    productStock, orderRequestedAmount);
+        }
     }
 
     // Um pedido corporativo não pode conter outros tipos de produtos
@@ -200,6 +226,9 @@ public class OrdersServiceImpl implements OrdersService {
         }
     }
 
+    // Calcula o valor total do pedido. Se um pedido for corporativo e a quantia
+    // pedia for maior ou igual a 100,
+    // recebe um desconto de 15%
     private BigDecimal calculateTotalPrice(Optional<ProductEntity> productEntity, Integer orderRequestedAmount) {
         if (productEntity.get().getProductType().equals(ProductType.CORPORATE)
                 && orderRequestedAmount >= 100) {
